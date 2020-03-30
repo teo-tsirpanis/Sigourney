@@ -1,4 +1,9 @@
-// Source code incorporated by Fody.
+// Copyright (c) 2020 Theodore Tsirpanis
+// 
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
+// Source code based on Fody.
 // https://github.com/Fody/Fody/blob/6.1.0/FodyIsolated/StrongNameKeyFinder.cs
 
 using System;
@@ -52,15 +57,14 @@ namespace Sigourney
                 return keyFilePath;
             }
 
-            var keyFileSuffix = (string) asm
+            var keyFileSuffix = asm
                 .CustomAttributes
                 .FirstOrDefault(x => x.AttributeType.Name == "AssemblyKeyFileAttribute")
                 ?.ConstructorArguments
-                ?.First()
-                .Value;
-            if (keyFileSuffix != null)
+                ?.First();
+            if (keyFileSuffix.HasValue)
             {
-                keyFilePath = Path.Combine(config.IntermediateDirectory, keyFileSuffix);
+                keyFilePath = Path.Combine(config.IntermediateDirectory, (string) keyFileSuffix.Value.Value);
                 Log.Debug("Using strong name key from [AssemblyKeyFileAttribute(\"{KeyFileSuffix}\")] '{KeyFilePath}'",
                     keyFileSuffix, keyFilePath);
                 return keyFilePath;

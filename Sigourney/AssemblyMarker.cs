@@ -30,7 +30,7 @@ namespace Sigourney
                                                     FieldAttributes.Static |
                                                     FieldAttributes.HasDefault;
             var fieldDefinition =
-                new FieldDefinition("Version", fieldAttributes, asm.MainModule.TypeSystem.String)
+                new FieldDefinition(name + "Version", fieldAttributes, asm.MainModule.TypeSystem.String)
                 {
                     Constant = version
                 };
