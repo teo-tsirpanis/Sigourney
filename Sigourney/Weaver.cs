@@ -8,7 +8,6 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using Serilog;
-using Serilog.Core;
 
 namespace Sigourney
 {
@@ -19,21 +18,13 @@ namespace Sigourney
     [PublicAPI]
     public abstract partial class Weaver
     {
-        /// <summary>
-        /// A Serilog <see cref="ILogger"/> that will
-        /// record any events that happen in the weaver.
-        /// </summary>
-        protected readonly ILogger Log;
         private readonly string _version;
 
         /// <summary>
         /// Creates a <see cref="Weaver"/>.
         /// </summary>
-        /// <param name="log">The <see cref="ILogger"/> to
-        /// be put to the <see cref="Log"/> field.</param>
-        protected Weaver(ILogger? log = null)
+        protected Weaver()
         {
-            Log = log ?? Logger.None;
             var ownerAssembly = GetType().Assembly;
             _version = ownerAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
                 ?.InformationalVersion ?? ownerAssembly.GetName().Version.ToString();
@@ -46,27 +37,28 @@ namespace Sigourney
         /// will be presented to instruct Sigourney not to weave it again.</remarks>
         /// <param name="inputPath">The path of the assembly to weave.</param>
         /// <param name="outputPath">The path where the weaved assembly will be stored.
-        /// Defaults to <paramref name="inputPath"/>.</param>
-        /// <param name="config">An optional <see cref="WeaverConfig"/> object to
+        /// Defaults to <paramref name="inputPath"/> if null.</param>
+        /// <param name="log">A Serilog <see cref="ILogger"/> that will
+        /// record any events that happen in the weaver.</param>
+        /// <param name="config">An <see cref="WeaverConfig"/> object to
         /// further parameterize the weaving process.</param>
-        public void Weave(string inputPath, string? outputPath = null, WeaverConfig? config = null)
+        public void Weave(string inputPath, string? outputPath, ILogger log, WeaverConfig config)
         {
             using var resultingAsembly = new MemoryStream();
             using (var asm = AssemblyDefinition.ReadAssembly(inputPath))
             {
                 var assemblyName = asm.Name.Name;
-                if (config != null)
-                    FindStrongNameKey(config, asm);
+                FindStrongNameKey(config, asm, log);
 
                 if (AssemblyMarker.ShouldProcess(asm, ProductName))
                 {
-                    if (!DoWeave(asm, config))
+                    if (!DoWeave(asm, log, config))
                     {
-                        Log.Debug("Skipping weaving {AssemblyName} as requested.", assemblyName);
+                        log.Debug("Skipping weaving {AssemblyName} as requested.", assemblyName);
                         return;
                     }
 
-                    AssemblyMarker.MarkAsProcessed(asm, ProductName, _version, Log);
+                    AssemblyMarker.MarkAsProcessed(asm, ProductName, _version, log);
                     var writerParams = new WriterParameters
                     {
                         StrongNameKeyPair = _keyPair
@@ -76,7 +68,7 @@ namespace Sigourney
                 }
                 else
                 {
-                    Log.Debug("{AssemblyName} is already weaved.", assemblyName);
+                    log.Debug("{AssemblyName} is already weaved.", assemblyName);
                 }
             }
 
@@ -96,8 +88,13 @@ namespace Sigourney
         /// Performs the actual weaving using Mono.Cecil.
         /// </summary>
         /// <param name="asm">The assembly to modify in an <see cref="AssemblyDefinition"/> format.</param>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        protected abstract bool DoWeave(AssemblyDefinition asm, WeaverConfig? config);
+        /// <param name="log">A Serilog <see cref="ILogger"/> that will
+        /// record any events that happen in the weaver.</param>
+        /// <param name="config">An <see cref="WeaverConfig"/> object to
+        /// further parameterize the weaving process.</param>
+        /// <returns>Whether weaving actually happened. The weaver might
+        /// determine that weaving is unnecessary for this assembly
+        /// and Sigourney will skip modifying it entirely.</returns>
+        protected abstract bool DoWeave(AssemblyDefinition asm, ILogger log, WeaverConfig config);
     }
 }

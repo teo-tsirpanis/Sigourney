@@ -56,7 +56,7 @@ namespace Sigourney
         /// <summary>
         /// All configuration items passed from MSBuild to Sigourney.
         /// </summary>
-        /// <remarks>To add more, write <code>&lt;SigourneyConfiguration Include="" Key="Value" /&gt;
+        /// <remarks>To add more, write <code>&lt;SigourneyConfig Include="" Key="Value" /&gt;
         /// </code></remarks>
         public readonly IReadOnlyDictionary<string, string> AllConfiguration;
 
