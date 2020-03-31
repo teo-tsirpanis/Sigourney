@@ -12,7 +12,7 @@ using Serilog;
 namespace Sigourney
 {
     /// <summary>
-    /// An abstract class for a process that modifies (weaves) a .NET assembly.
+    /// An abstract class for a procedure that modifies (weaves) a .NET assembly.
     /// </summary>
     /// <remarks>Yes, I know about the type's fully qualified name...</remarks>
     [PublicAPI]

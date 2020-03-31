@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" xmlns="https://raw.githubusercontent.com/MyGet/NuGetPackages/master/NuSpec/tools/nuspec.xsd"?>
+<package>
+  <metadata>
+    <id>$packageId$</id>
+    <version>$version$</version>
+    <description>$description$</description>
+    <authors>$authors$</authors>
+    <copyright>$copyright$</copyright>
+    <developmentDependency>$developmentDependency$</developmentDependency>
+    <releaseNotes>$packageReleaseNotes</releaseNotes>
+    <projectUrl>$projectUrl$</projectUrl>
+    <license type="expression">$packageLicenseExpression$</license>
+    <tags>$packageTags$</tags>
+    <repository type="$packageRepositoryType$" url="$packageRepositoryUrl$" />
+  </metadata>
+  <files>
+    <file src="$intermediateDirectory$/nuget/**/*.*" target="" />
+  </files>
+</package>

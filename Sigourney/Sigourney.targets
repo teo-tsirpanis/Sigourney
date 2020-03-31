@@ -1,0 +1,73 @@
+<!--
+Copyright (c) 2020 Theodore Tsirpanis
+
+This software is released under the MIT License.
+https://opensource.org/licenses/MIT
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(SigourneyPublish) == true">
+    <NuspecFile Condition="'$(NuspecFile)' == ''">$(MSBuildThisFileDirectory)/SigourneyTemplate.nuspec</NuspecFile>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GenerateNuspecDependsOn>SigourneyCopyNugetPackageFiles;SigourneyPreparePack;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
+    <PackDependsOn>$(PackDependsOn);CleanAfterPack</PackDependsOn>
+    <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
+
+    <NuspecProperties>$(NuspecProperties);packageId=$(PackageId)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);version=$(Version)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);description=$(Description)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);authors=$(Authors)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);copyright=$(Copyright)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);developmentDependency=$(DevelopmentDependency)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);packageReleaseNotes=$(PackageReleaseNotes)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);projectUrl=$(projectUrl)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);packageLicenseExpression=$(PackageLicenseExpression)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);packageTags=$(PackageTags)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);packageRepositoryType=$(PackageRepositoryType)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);packageRepositoryUrl=$(PackageRepositoryUrl)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);intermediateDirectory=$(IntermediateDirectory)</NuspecProperties>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SigourneyConfiguration Include="Sigourney default configuration">
+      <SignAssembly>$(SignAssembly)</SignAssembly>
+      <IntermediateDirectory>$(IntermediateDirectory)</IntermediateDirectory>
+      <KeyOriginatorFile>$(KeyOriginatorFile)</KeyOriginatorFile>
+      <AssemblyOriginatorKeyFile>$(AssemblyOriginatorKeyFile)</AssemblyOriginatorKeyFile>
+    </SigourneyConfiguration>
+  </ItemGroup>
+
+  <Target
+      Name="SigourneyPreparePack"
+      Condition="$(SigourneyPublish) == true AND $(DesignTimeBuild) != true"
+      BeforeTargets="GenerateNuspec"
+      DependsOnTargets="Build">
+    <ItemGroup>
+      <_FrameworksToBuild Include="$(TargetFrameworks)" />
+      <_ProjectsToPublish Include="$(MSBuildThisFileFullPath)" AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(IntermediateDirectory)/nuget/tools/%(_FrameworksToBuild.Identity)/" />
+    </ItemGroup>
+    <RemoveDir Directories="$(IntermediateDirectory)/nuget/tools/" />
+    <MSBuild Projects="@(_ProjectsToPublish)" Properties="NoBuild=true;Configuration=$(Configuration)" Targets="Publish" BuildInParallel="$(BuildInParallel)" />
+  </Target>
+
+  <Target Name="CleanAfterPack" AfterTargets="Pack">
+    <RemoveDir Directories="$(IntermediateDirectory)/nuget/" />
+  </Target>
+
+  <Target
+      Name="SigourneyCopyNugetPackageFiles"
+      Condition="$(SigourneyPublish) == true AND $(DesignTimeBuild) != true"
+      BeforeTargets="SigourneyPreparePack">
+    <ItemGroup>
+      <_NuGetPackageFiles Include="%(None.Identity)" Condition="%(None.Pack) == true">
+        <Destination>$(IntermediateDirectory)/nuget/%(None.PackagePath)</Destination>
+      <_NuGetPackageFiles>
+    </ItemGroup>
+    <Copy
+        SourceFiles="@(_NuGetPackageFiles->'%(Identity)')"
+        DestinationFiles="@(_NuGetPackageFiles->'%(Destination)')"
+        Retries="10" />
+  </Target>
+</Project>
