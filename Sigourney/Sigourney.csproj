@@ -2,6 +2,8 @@
   <PropertyGroup>
     <PackageId>Sigourney</PackageId>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Version>0.0.1</Version>
+    <PackageReleaseNotes>First test release.</PackageReleaseNotes>
     <Authors>Theodore Tsirpanis</Authors>
     <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License. Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
     <PackageProjectUrl>https://github.com/teo-tsirpanis/Sigourney</PackageProjectUrl>
