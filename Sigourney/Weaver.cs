@@ -19,14 +19,18 @@ namespace Sigourney
     [PublicAPI]
     public abstract partial class Weaver
     {
+        /// <summary>
+        /// A Serilog <see cref="ILogger"/> that will
+        /// record any events that happen in the weaver.
+        /// </summary>
         protected readonly ILogger Log;
         private readonly string _version;
 
         /// <summary>
         /// Creates a <see cref="Weaver"/>.
         /// </summary>
-        /// <param name="log">A Serilog <see cref="ILogger"/> that
-        /// will record any events inside the weaver.</param>
+        /// <param name="log">The <see cref="ILogger"/> to
+        /// be put to the <see cref="Log"/> field.</param>
         protected Weaver(ILogger? log = null)
         {
             Log = log ?? Logger.None;
