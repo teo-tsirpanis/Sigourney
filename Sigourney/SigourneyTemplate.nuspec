@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" xmlns="https://raw.githubusercontent.com/MyGet/NuGetPackages/master/NuSpec/tools/nuspec.xsd"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <id>$packageId$</id>
@@ -8,7 +8,7 @@
     <copyright>$copyright$</copyright>
     <developmentDependency>$developmentDependency$</developmentDependency>
     <releaseNotes>$packageReleaseNotes</releaseNotes>
-    <projectUrl>$projectUrl$</projectUrl>
+    <projectUrl>$packageProjectUrl$</projectUrl>
     <license type="expression">$packageLicenseExpression$</license>
     <tags>$packageTags$</tags>
     <repository type="$packageRepositoryType$" url="$packageRepositoryUrl$" />

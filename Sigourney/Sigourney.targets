@@ -22,7 +22,7 @@ https://opensource.org/licenses/MIT
     <NuspecProperties>$(NuspecProperties);copyright=$(Copyright)</NuspecProperties>
     <NuspecProperties>$(NuspecProperties);developmentDependency=$(DevelopmentDependency)</NuspecProperties>
     <NuspecProperties>$(NuspecProperties);packageReleaseNotes=$(PackageReleaseNotes)</NuspecProperties>
-    <NuspecProperties>$(NuspecProperties);projectUrl=$(projectUrl)</NuspecProperties>
+    <NuspecProperties>$(NuspecProperties);packageProjectUrl=$(PackageProjectUrl)</NuspecProperties>
     <NuspecProperties>$(NuspecProperties);packageLicenseExpression=$(PackageLicenseExpression)</NuspecProperties>
     <NuspecProperties>$(NuspecProperties);packageTags=$(PackageTags)</NuspecProperties>
     <NuspecProperties>$(NuspecProperties);packageRepositoryType=$(PackageRepositoryType)</NuspecProperties>
@@ -44,9 +44,15 @@ https://opensource.org/licenses/MIT
       Condition="$(SigourneyPublish) == true AND $(DesignTimeBuild) != true"
       BeforeTargets="GenerateNuspec"
       DependsOnTargets="Build">
+    <Error
+        Condition="'$(TargetFramework)' == '' AND '@(TargetFrameworks)' == ''"
+        Text="You must specify a framework with the TargetFramework(s) property." />
     <ItemGroup>
       <_FrameworksToBuild Include="$(TargetFrameworks)" />
-      <_ProjectsToPublish Include="$(MSBuildThisFileFullPath)" AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(IntermediateDirectory)/nuget/tools/%(_FrameworksToBuild.Identity)/" />
+      <_FrameworksToBuild Include="$(TargetFramework)" Condition="'@(_FrameworksToBuild)' == ''" />
+      <_ProjectsToPublish
+          Include="$(MSBuildProjectFullPath)"
+          AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(IntermediateDirectory)/nuget/tools/%(_FrameworksToBuild.Identity)/" />
     </ItemGroup>
     <RemoveDir Directories="$(IntermediateDirectory)/nuget/tools/" />
     <MSBuild Projects="@(_ProjectsToPublish)" Properties="NoBuild=true;Configuration=$(Configuration)" Targets="Publish" BuildInParallel="$(BuildInParallel)" />
@@ -63,7 +69,7 @@ https://opensource.org/licenses/MIT
     <ItemGroup>
       <_NuGetPackageFiles Include="%(None.Identity)" Condition="%(None.Pack) == true">
         <Destination>$(IntermediateDirectory)/nuget/%(None.PackagePath)</Destination>
-      <_NuGetPackageFiles>
+      </_NuGetPackageFiles>
     </ItemGroup>
     <Copy
         SourceFiles="@(_NuGetPackageFiles->'%(Identity)')"
