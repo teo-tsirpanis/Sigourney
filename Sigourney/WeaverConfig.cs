@@ -1,5 +1,5 @@
 // Copyright (c) 2020 Theodore Tsirpanis
-// 
+//
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
@@ -59,6 +59,12 @@ namespace Sigourney
         /// <remarks>To add more, write <code>&lt;SigourneyConfig Include="" Key="Value" /&gt;
         /// </code></remarks>
         public readonly IReadOnlyDictionary<string, string> AllConfiguration;
+
+        /// <summary>Looks for a configuration value from the given key.</summary>
+        /// <param name="key">The configuration key to look for.</param>
+        /// <returns>The configuration value for <paramref name="key"/>,
+        /// or <see langword="null"/>.</returns>
+        public string? GetConfigValue(string key) => AllConfiguration.TryGetValue(key, out var v) ? v : null;
 
         private void Init()
         {

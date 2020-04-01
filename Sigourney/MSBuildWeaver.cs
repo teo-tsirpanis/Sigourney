@@ -35,6 +35,11 @@ namespace Sigourney
         /// if not specified.</remarks>
         public string? OutputPath { get; set; }
 
+        /// <summary>
+        /// The instance of the weaver to be used.
+        /// </summary>
+        protected readonly TWeaver ThisWeaver = new TWeaver();
+
         /// <inheritdoc cref="Task.Execute"/>
         public override bool Execute()
         {
@@ -42,11 +47,9 @@ namespace Sigourney
                 .MinimumLevel.Verbose()
                 .WriteTo.MSBuild(this)
                 .CreateLogger();
-            var weaver = new TWeaver();
-
             try
             {
-                weaver.Weave(AssemblyPath, OutputPath, log, new WeaverConfig(SigourneyConfig));
+                ThisWeaver.Weave(AssemblyPath, OutputPath, log, new WeaverConfig(SigourneyConfig));
                 return !Log.HasLoggedErrors;
             }
             catch (Exception e)

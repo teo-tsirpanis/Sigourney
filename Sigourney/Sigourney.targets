@@ -7,14 +7,17 @@ https://opensource.org/licenses/MIT
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <!-- Temporarily disable it because it's
+    extremely hard to get it right. -->
+    <SigourneyPublish>false</SigourneyPublish>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(SigourneyAssembly)' == '' AND '$(MSBuildRuntimeType)' == 'Core'">
+  <!--<PropertyGroup Condition="'$(SigourneyAssembly)' == '' AND '$(MSBuildRuntimeType)' == 'Core'">
     <SigourneyAssembly>$(MSBuildThisFileDirectory)../lib/netstandard2.0/Sigourney.dll</SigourneyAssembly>
   </PropertyGroup>
   <PropertyGroup Condition="'$(SigourneyAssembly)' == '' AND '$(MSBuildRuntimeType)' != 'Core'">
     <SigourneyAssembly>$(MSBuildThisFileDirectory)../lib/net45/Sigourney.dll</SigourneyAssembly>
-  </PropertyGroup>
+  </PropertyGroup>-->
 
   <PropertyGroup Condition="$(SigourneyPublish) == true">
     <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
@@ -33,7 +36,7 @@ https://opensource.org/licenses/MIT
     </SigourneyConfiguration>
   </ItemGroup>
 
-  <UsingTask TaskName="SigourneyWriteNuspecTask" AssemblyFile="$(SigourneyAssembly)" />
+  <!--<UsingTask TaskName="SigourneyWriteNuspecTask" AssemblyFile="$(SigourneyAssembly)" />-->
 
   <Target
       Name="SigourneyCopyNugetPackageFiles"
