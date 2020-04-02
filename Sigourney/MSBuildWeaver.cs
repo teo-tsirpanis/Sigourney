@@ -9,10 +9,9 @@ namespace Sigourney
     /// <summary>
     /// An MSBuild task that executes a <see cref="Weaver"/>.
     /// </summary>
-    /// <typeparam name="TWeaver">The type of the weaver.</typeparam>
     [PublicAPI]
     // ReSharper disable once InconsistentNaming
-    public abstract class MSBuildWeaver<TWeaver>: Task where TWeaver: Weaver, new()
+    public abstract class MSBuildWeaver: Task
     {
         /// <summary>
         /// Configuration needed by Sigourney.
@@ -38,7 +37,7 @@ namespace Sigourney
         /// <summary>
         /// The instance of the weaver to be used.
         /// </summary>
-        protected readonly TWeaver ThisWeaver = new TWeaver();
+        protected abstract Weaver CreateWeaver();
 
         /// <inheritdoc cref="Task.Execute"/>
         public override bool Execute()
@@ -49,7 +48,7 @@ namespace Sigourney
                 .CreateLogger();
             try
             {
-                ThisWeaver.Weave(AssemblyPath, OutputPath, log, new WeaverConfig(SigourneyConfig));
+                CreateWeaver().Weave(AssemblyPath, OutputPath, log, new WeaverConfig(SigourneyConfig));
                 return !Log.HasLoggedErrors;
             }
             catch (Exception e)
