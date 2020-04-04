@@ -2,6 +2,7 @@ using System;
 using JetBrains.Annotations;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Mono.Cecil;
 using Serilog;
 
 namespace Sigourney
@@ -35,9 +36,9 @@ namespace Sigourney
         public string? OutputPath { get; set; }
 
         /// <summary>
-        /// The instance of the weaver to be used.
+        /// Modifies the assembly.
         /// </summary>
-        protected abstract Weaver CreateWeaver();
+        protected abstract bool DoWeave(AssemblyDefinition asm);
 
         /// <inheritdoc cref="Task.Execute"/>
         public override bool Execute()
@@ -48,7 +49,7 @@ namespace Sigourney
                 .CreateLogger();
             try
             {
-                CreateWeaver().Weave(AssemblyPath, OutputPath, log, new WeaverConfig(SigourneyConfig));
+                Weaver.Weave(AssemblyPath, OutputPath, DoWeave, log, new WeaverConfig(SigourneyConfig));
                 return !Log.HasLoggedErrors;
             }
             catch (Exception e)

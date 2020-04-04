@@ -1,5 +1,5 @@
 // Copyright (c) 2020 Theodore Tsirpanis
-// 
+//
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
@@ -15,13 +15,13 @@ using Serilog;
 
 namespace Sigourney
 {
-    public partial class Weaver
+    internal static class StrongNameKeyFinder
     {
-        private StrongNameKeyPair? _keyPair;
-        private byte[]? _publicKey;
-
-        private void FindStrongNameKey(WeaverConfig config, AssemblyDefinition asm, ILogger log)
+        internal static void FindStrongNameKey(WeaverConfig config, AssemblyDefinition asm, ILogger log,
+            out StrongNameKeyPair? keyPair, out byte[]? publicKey)
         {
+            keyPair = null;
+            publicKey = null;
             if (!config.SignAssembly)
             {
                 return;
@@ -34,21 +34,21 @@ namespace Sigourney
                 throw new FileNotFoundException("KeyFilePath was defined but file does not exist.", keyFilePath);
 
             var fileBytes = File.ReadAllBytes(keyFilePath);
-            _keyPair = new StrongNameKeyPair(fileBytes);
+            keyPair = new StrongNameKeyPair(fileBytes);
 
             try
             {
-                _publicKey = _keyPair.PublicKey;
+                publicKey = keyPair.PublicKey;
             }
             catch (ArgumentException e)
             {
                 log.Debug(e, "Exception while trying to load strong-name key pair.");
-                _keyPair = null;
-                _publicKey = fileBytes;
+                keyPair = null;
+                publicKey = fileBytes;
             }
         }
 
-        private string? GetKeyFilePath(WeaverConfig config, AssemblyDefinition asm, ILogger log)
+        private static string? GetKeyFilePath(WeaverConfig config, AssemblyDefinition asm, ILogger log)
         {
             var keyFilePath = config.KeyFilePath;
             if (keyFilePath != null)
