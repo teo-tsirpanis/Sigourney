@@ -4,6 +4,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
 using Serilog;
+using Serilog.Sinks.MSBuild;
+using ILogger = Serilog.ILogger;
 
 namespace Sigourney
 {
@@ -12,15 +14,15 @@ namespace Sigourney
     /// </summary>
     [PublicAPI]
     // ReSharper disable once InconsistentNaming
-    public abstract class MSBuildWeaver: Task
+    public abstract class MSBuildWeaver : Task
     {
-        /// <summary>
-        /// Configuration needed by Sigourney.
-        /// </summary>
-        /// <remarks>In MSBuild, pass the item list
-        /// <c>@(SigourneyConfig)</c> to this property.</remarks>
-        [Required]
-        public ITaskItem[] SigourneyConfig { get; set; } = new ITaskItem[0];
+        [Required] public bool SignAssembly { get; set; }
+
+        public string IntermediateDirectory { get; set; }
+
+        [Required] public string? KeyOriginatorFile { get; set; }
+
+        [Required] public string? AssemblyOriginatorKeyFile { get; set; }
 
         /// <summary>
         /// The path of the assembly to weave.
@@ -28,6 +30,7 @@ namespace Sigourney
         /// <remarks>Required.</remarks>
         [Required]
         public string AssemblyPath { get; set; } = "";
+
         /// <summary>
         /// The path to save the weaved assembly.
         /// </summary>
@@ -36,20 +39,47 @@ namespace Sigourney
         public string? OutputPath { get; set; }
 
         /// <summary>
-        /// Modifies the assembly.
+        /// A Serilog <see cref="ILogger"/> that redirects events to MSBuild.
         /// </summary>
+        /// <remarks>The type was named <c>Log2</c> to distinguish itself from
+        /// the less flexible MSBuild's <see cref="Log"/> property.</remarks>
+        protected ILogger Log2;
+
+        /// <summary>
+        /// Performs the actual weaving of the assembly.
+        /// </summary>
+        /// <param name="asm">A Mono.Cecil <see cref="AssemblyDefinition"/>
+        /// representation of the assembly to weave.</param>
+        /// <returns>Whether the assembly was actually weaved.
+        /// If it returns <see langword="false"/> and the output
+        /// assembly path is not specified, the input assembly
+        /// file will not be overwritten. If the output path is
+        /// specified, the input assembly will be copied there as-is.</returns>
         protected abstract bool DoWeave(AssemblyDefinition asm);
 
-        /// <inheritdoc cref="Task.Execute"/>
+        /// <inheritdoc/>
         public override bool Execute()
         {
-            var log = new LoggerConfiguration()
+            Log2 = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .WriteTo.MSBuild(this)
-                .CreateLogger();
+                .CreateLogger()
+                .ForContext(MSBuildProperties.File, AssemblyPath);
             try
             {
-                Weaver.Weave(AssemblyPath, OutputPath, DoWeave, log, new WeaverConfig(SigourneyConfig));
+                if (string.IsNullOrEmpty(IntermediateDirectory))
+                {
+                    Log.LogError("The MSBuild task parameter 'IntermediateDirectory' is not specified." +
+                                 " Please set it to '$(ProjectDir)$(IntermediateOutputPath)'.");
+                    return false;
+                }
+                var config = new WeaverConfig
+                {
+                    KeyFilePath = KeyOriginatorFile ?? AssemblyOriginatorKeyFile,
+                    SignAssembly = SignAssembly,
+                    IntermediateDirectory = IntermediateDirectory
+                };
+                Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config);
                 return !Log.HasLoggedErrors;
             }
             catch (Exception e)

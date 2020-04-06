@@ -13,7 +13,7 @@ namespace Sigourney
         internal static bool ShouldProcess(AssemblyDefinition asm, string productName)
         {
             var name = GetProcessedByClassName(productName);
-            return asm.MainModule.GetAllTypes().Any(x => x.FullName == name);
+            return asm.MainModule.GetAllTypes().All(x => x.FullName != name);
         }
 
         internal static void MarkAsProcessed(AssemblyDefinition asm, string productName, string version, ILogger log)
@@ -30,7 +30,7 @@ namespace Sigourney
                                                     FieldAttributes.Static |
                                                     FieldAttributes.HasDefault;
             var fieldDefinition =
-                new FieldDefinition(name + "Version", fieldAttributes, asm.MainModule.TypeSystem.String)
+                new FieldDefinition(productName + "Version", fieldAttributes, asm.MainModule.TypeSystem.String)
                 {
                     Constant = version
                 };

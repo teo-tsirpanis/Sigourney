@@ -16,7 +16,7 @@ namespace Sigourney
     /// An abstract class for a procedure that modifies (weaves) a .NET assembly.
     /// </summary>
     /// <remarks>The type's fully qualified name does not imply an endorsement
-    /// or support of any kind whatsoever.</remarks>
+    /// or support of any kind from anyone.</remarks>
     [PublicAPI]
     public static class Weaver
     {
@@ -37,9 +37,7 @@ namespace Sigourney
         /// <param name="inputPath">The path of the assembly to weave.</param>
         /// <param name="outputPath">The path where the weaved assembly will be stored.
         /// Defaults to <paramref name="inputPath"/> if null.</param>
-        /// <param name="fWeave">A function that accepts an <see cref="AssemblyDefinition"/>
-        /// and returns whether it was actually modified (returning <see langword="false"/>
-        /// will not write it to disk).</param>
+        /// <param name="fWeave"><see cref="MSBuildWeaver.DoWeave"/></param>
         /// <param name="log">A Serilog <see cref="ILogger"/> that will
         /// record any events that happen in the weaver.</param>
         /// <param name="config">A <see cref="WeaverConfig"/> object to
@@ -52,7 +50,7 @@ namespace Sigourney
             string? productName = null)
         {
             // The declaring type is null on "global module functions",
-            // something I don't think it can happen with the known .NETt languages.
+            // something I don't think it can happen with the known .NET languages.
             var weaverAssembly = fWeave.Method.DeclaringType?.Assembly ?? Assembly.GetCallingAssembly();
             var productNameActual = productName ?? weaverAssembly.GetName().Name;
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
@@ -66,7 +64,9 @@ namespace Sigourney
                 {
                     if (!fWeave(asm))
                     {
-                        log.Debug("Skipping weaving {AssemblyName} as requested.", assemblyName);
+                        log.Debug("Skipping weaving {AssemblyName} because nothing changed.", assemblyName);
+                        if (outputPath != null)
+                            File.Copy(inputPath, outputPath, true);
                         return;
                     }
 
