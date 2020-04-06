@@ -6,6 +6,7 @@ using Mono.Cecil;
 using Serilog;
 using Serilog.Sinks.MSBuild;
 using ILogger = Serilog.ILogger;
+using Logger = Serilog.Core.Logger;
 
 namespace Sigourney
 {
@@ -18,7 +19,7 @@ namespace Sigourney
     {
         [Required] public bool SignAssembly { get; set; }
 
-        public string IntermediateDirectory { get; set; }
+        public string? IntermediateDirectory { get; set; }
 
         [Required] public string? KeyOriginatorFile { get; set; }
 
@@ -43,7 +44,7 @@ namespace Sigourney
         /// </summary>
         /// <remarks>The type was named <c>Log2</c> to distinguish itself from
         /// the less flexible MSBuild's <see cref="Log"/> property.</remarks>
-        protected ILogger Log2;
+        protected ILogger Log2 = Logger.None;
 
         /// <summary>
         /// Performs the actual weaving of the assembly.
