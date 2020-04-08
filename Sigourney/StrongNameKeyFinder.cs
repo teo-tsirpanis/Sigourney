@@ -51,7 +51,7 @@ namespace Sigourney
         private static string? GetKeyFilePath(WeaverConfig config, AssemblyDefinition asm, ILogger log)
         {
             var keyFilePath = config.KeyFilePath;
-            if (keyFilePath != null)
+            if (!string.IsNullOrEmpty(config.KeyFilePath))
             {
                 keyFilePath = Path.GetFullPath(keyFilePath);
                 log.Debug("Using strong name key from KeyFilePath '{KeyFilePath}'.", keyFilePath);

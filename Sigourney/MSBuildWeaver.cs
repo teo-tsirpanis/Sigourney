@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -17,13 +18,14 @@ namespace Sigourney
     // ReSharper disable once InconsistentNaming
     public abstract class MSBuildWeaver : Task
     {
-        [Required] public bool SignAssembly { get; set; }
+        private ILogger _log2;
+        public bool SignAssembly { get; set; }
 
         public string? IntermediateDirectory { get; set; }
 
-        [Required] public string? KeyOriginatorFile { get; set; }
+        public string? KeyOriginatorFile { get; set; }
 
-        [Required] public string? AssemblyOriginatorKeyFile { get; set; }
+        public string? AssemblyOriginatorKeyFile { get; set; }
 
         /// <summary>
         /// The path of the assembly to weave.
@@ -43,8 +45,22 @@ namespace Sigourney
         /// A Serilog <see cref="ILogger"/> that redirects events to MSBuild.
         /// </summary>
         /// <remarks>The type was named <c>Log2</c> to distinguish itself from
-        /// the less flexible MSBuild's <see cref="Log"/> property.</remarks>
-        protected ILogger Log2 = Logger.None;
+        /// the less flexible <see cref="Log"/> property.</remarks>
+        public ILogger Log2
+        {
+            get
+            {
+                if (_log2 != null) return _log2;
+                var log = new LoggerConfiguration()
+                    .MinimumLevel.Verbose()
+                    .WriteTo.MSBuild(this)
+                    .CreateLogger()
+                    .ForContext(MSBuildProperties.File, AssemblyPath);
+                Interlocked.Exchange(ref _log2, log);
+
+                return _log2;
+            }
+        }
 
         /// <summary>
         /// Performs the actual weaving of the assembly.
@@ -61,11 +77,6 @@ namespace Sigourney
         /// <inheritdoc/>
         public override bool Execute()
         {
-            Log2 = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
-                .WriteTo.MSBuild(this)
-                .CreateLogger()
-                .ForContext(MSBuildProperties.File, AssemblyPath);
             try
             {
                 if (string.IsNullOrEmpty(IntermediateDirectory))
@@ -74,6 +85,7 @@ namespace Sigourney
                                  " Please set it to '$(ProjectDir)$(IntermediateOutputPath)'.");
                     return false;
                 }
+
                 var config = new WeaverConfig
                 {
                     KeyFilePath = KeyOriginatorFile ?? AssemblyOriginatorKeyFile,
