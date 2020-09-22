@@ -7,7 +7,6 @@ using Mono.Cecil;
 using Serilog;
 using Serilog.Sinks.MSBuild;
 using ILogger = Serilog.ILogger;
-using Logger = Serilog.Core.Logger;
 
 namespace Sigourney
 {
@@ -15,10 +14,9 @@ namespace Sigourney
     /// An MSBuild task that executes a <see cref="Weaver"/>.
     /// </summary>
     [PublicAPI]
-    // ReSharper disable once InconsistentNaming
     public abstract class MSBuildWeaver : Task
     {
-        private ILogger _log2;
+        private ILogger? _log2;
         public bool SignAssembly { get; set; }
 
         public string? IntermediateDirectory { get; set; }
@@ -58,7 +56,7 @@ namespace Sigourney
                     .ForContext(MSBuildProperties.File, AssemblyPath);
                 Interlocked.Exchange(ref _log2, log);
 
-                return _log2;
+                return _log2!;
             }
         }
 
@@ -77,29 +75,21 @@ namespace Sigourney
         /// <inheritdoc/>
         public override bool Execute()
         {
-            try
+            if (string.IsNullOrEmpty(IntermediateDirectory))
             {
-                if (string.IsNullOrEmpty(IntermediateDirectory))
-                {
-                    Log.LogError("The MSBuild task parameter 'IntermediateDirectory' is not specified." +
-                                 " Please set it to '$(ProjectDir)$(IntermediateOutputPath)'.");
-                    return false;
-                }
-
-                var config = new WeaverConfig
-                {
-                    KeyFilePath = KeyOriginatorFile ?? AssemblyOriginatorKeyFile,
-                    SignAssembly = SignAssembly,
-                    IntermediateDirectory = IntermediateDirectory
-                };
-                Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config);
-                return !Log.HasLoggedErrors;
-            }
-            catch (Exception e)
-            {
-                Log.LogErrorFromException(e);
+                Log.LogError("The MSBuild task parameter 'IntermediateDirectory' is not specified." +
+                             " Please set it to '$(ProjectDir)$(IntermediateOutputPath)'.");
                 return false;
             }
+
+            var config = new WeaverConfig
+            {
+                KeyFilePath = KeyOriginatorFile ?? AssemblyOriginatorKeyFile,
+                SignAssembly = SignAssembly,
+                IntermediateDirectory = IntermediateDirectory
+            };
+            Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config);
+            return !Log.HasLoggedErrors;
         }
     }
 }

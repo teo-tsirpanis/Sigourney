@@ -79,9 +79,7 @@ namespace Sigourney
                     asm.Write(resultingAsembly, writerParams);
                 }
                 else
-                {
                     log.Debug("{AssemblyName} is already weaved.", assemblyName);
-                }
             }
 
             using var outputFile = File.Create(outputPath ?? inputPath);
