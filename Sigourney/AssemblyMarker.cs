@@ -1,6 +1,4 @@
-using System.Linq;
 using Mono.Cecil;
-using Mono.Cecil.Rocks;
 using Serilog;
 
 namespace Sigourney
@@ -13,7 +11,7 @@ namespace Sigourney
         internal static bool ShouldProcess(AssemblyDefinition asm, string productName)
         {
             var name = GetProcessedByClassName(productName);
-            return asm.MainModule.GetAllTypes().All(x => x.FullName != name);
+            return asm.MainModule.GetType(name) == null;
         }
 
         internal static void MarkAsProcessed(AssemblyDefinition asm, string productName, string version, ILogger log)

@@ -53,7 +53,7 @@ namespace Sigourney
             var keyFilePath = config.KeyFilePath;
             if (!string.IsNullOrEmpty(config.KeyFilePath))
             {
-                keyFilePath = Path.GetFullPath(keyFilePath);
+                keyFilePath = Path.GetFullPath(keyFilePath!);
                 log.Debug("Using strong name key from KeyFilePath '{KeyFilePath}'.", keyFilePath);
                 return keyFilePath;
             }
@@ -65,7 +65,7 @@ namespace Sigourney
                 ?.First();
             if (keyFileSuffix.HasValue)
             {
-                keyFilePath = Path.Combine(config.IntermediateDirectory, (string) keyFileSuffix.Value.Value);
+                keyFilePath = Path.Combine(config.GetIntermediateDirectory(), (string) keyFileSuffix.Value.Value);
                 log.Debug("Using strong name key from [AssemblyKeyFileAttribute(\"{KeyFileSuffix}\")] '{KeyFilePath}'",
                     keyFileSuffix, keyFilePath);
                 return keyFilePath;

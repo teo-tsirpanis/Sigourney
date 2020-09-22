@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.Build.Framework;
@@ -17,12 +16,17 @@ namespace Sigourney
     public abstract class MSBuildWeaver : Task
     {
         private ILogger? _log2;
+
+        /// <inheritdoc cref="WeaverConfig.SignAssembly"/>
         public bool SignAssembly { get; set; }
 
+        /// <inheritdoc cref="WeaverConfig.IntermediateDirectory"/>
         public string? IntermediateDirectory { get; set; }
 
+        /// <inheritdoc cref="WeaverConfig.KeyFilePath"/>
         public string? KeyOriginatorFile { get; set; }
 
+        /// <inheritdoc cref="WeaverConfig.KeyFilePath"/>
         public string? AssemblyOriginatorKeyFile { get; set; }
 
         /// <summary>

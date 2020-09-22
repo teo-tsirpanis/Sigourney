@@ -15,8 +15,8 @@ namespace Sigourney
     /// <summary>
     /// An abstract class for a procedure that modifies (weaves) a .NET assembly.
     /// </summary>
-    /// <remarks>The type's fully qualified name does not imply an endorsement
-    /// or support of any kind from anyone.</remarks>
+    /// <remarks>The type's fully qualified name does not imply
+    /// an endorsement or support of any kind from anyone.</remarks>
     [PublicAPI]
     public static class Weaver
     {
@@ -33,7 +33,7 @@ namespace Sigourney
         /// Weaves an assembly.
         /// </summary>
         /// <remarks>If weaving succeeds, a static class named "ProcessedBy<paramref name="productName"/>"
-        /// will be presented to instruct Sigourney not to weave it again.</remarks>
+        /// will be placed to the assembly, to instruct Sigourney not to weave it again.</remarks>
         /// <param name="inputPath">The path of the assembly to weave.</param>
         /// <param name="outputPath">The path where the weaved assembly will be stored.
         /// Defaults to <paramref name="inputPath"/> if null.</param>
@@ -43,10 +43,10 @@ namespace Sigourney
         /// <param name="config">A <see cref="WeaverConfig"/> object to
         /// further parameterize the weaving process.</param>
         /// <param name="productName">The name of the program that weaved the assembly.
-        /// If not specified, it will be the name of the assembly in which <paramref name="fWeave"/>
-        /// was declared.</param>
+        /// If not specified, it will be the name of the assembly
+        /// in which <paramref name="fWeave"/> was declared.</param>
         public static void Weave(string inputPath, string? outputPath,
-            Converter<AssemblyDefinition, bool> fWeave, ILogger log, WeaverConfig config,
+            Func<AssemblyDefinition, bool> fWeave, ILogger log, WeaverConfig config,
             string? productName = null)
         {
             // The declaring type is null on "global module functions",
@@ -84,7 +84,7 @@ namespace Sigourney
 
             using var outputFile = File.Create(outputPath ?? inputPath);
             resultingAsembly.Position = 0;
-            resultingAsembly.CopyTo(outputFile);
+            resultingAsembly.WriteTo(outputFile);
         }
     }
 }

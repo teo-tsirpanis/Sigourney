@@ -3,6 +3,8 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
+using System;
+
 namespace Sigourney
 {
     /// <summary>
@@ -33,5 +35,13 @@ namespace Sigourney
         /// <remarks>It is derieved from the MSBuild
         /// "IntermediateDirectory" property.</remarks>
         public string? IntermediateDirectory { get; set; }
+
+        internal string GetIntermediateDirectory()
+        {
+            if (IntermediateDirectory == null)
+                throw new ArgumentNullException(nameof(IntermediateDirectory),
+                    "The intermediate directory of a WeaverCongig object must not be null.");
+            return IntermediateDirectory;
+        }
     }
 }
