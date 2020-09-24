@@ -1,0 +1,14 @@
+<!--
+Copyright (c) 2020 Theodore Tsirpanis
+
+This software is released under the MIT License.
+https://opensource.org/licenses/MIT
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="$(MSBuildRuntimeType) == Core">
+    <SigourneyAssembly>$(MSBuildThisFileDirectory)../lib/netstandard2.0/Sigourney.dll</SigourneyAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(MSBuildRuntimeType) != Core">
+    <SigourneyAssembly>$(MSBuildThisFileDirectory)../lib/net45/Sigourney.dll</SigourneyAssembly>
+  </PropertyGroup>
+</Project>

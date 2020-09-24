@@ -6,27 +6,8 @@ https://opensource.org/licenses/MIT
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-    <!-- Temporarily disable it because it's
-    extremely hard to get it right. -->
-    <SigourneyPublish>false</SigourneyPublish>
-  </PropertyGroup>
-
-  <!--<PropertyGroup Condition="'$(SigourneyAssembly)' == '' AND '$(MSBuildRuntimeType)' == 'Core'">
-    <SigourneyAssembly>$(MSBuildThisFileDirectory)../lib/netstandard2.0/Sigourney.dll</SigourneyAssembly>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(SigourneyAssembly)' == '' AND '$(MSBuildRuntimeType)' != 'Core'">
-    <SigourneyAssembly>$(MSBuildThisFileDirectory)../lib/net45/Sigourney.dll</SigourneyAssembly>
-  </PropertyGroup>-->
-
-  <PropertyGroup Condition="$(SigourneyPublish) == true">
     <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
-    <NuspecFile Condition="'$(NuspecFile)' == ''">$(IntermediateDirectory)/PoweredBySigourney.nuspec</NuspecFile>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <GenerateNuspecDependsOn>SigourneyCopyNugetPackageFiles;SigourneyPreparePack;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
-    <PackDependsOn>$(PackDependsOn);CleanAfterPack</PackDependsOn>
   </PropertyGroup>
-
   <ItemGroup>
     <SigourneyConfiguration Include="Sigourney default configuration">
       <SignAssembly>$(SignAssembly)</SignAssembly>
@@ -36,65 +17,14 @@ https://opensource.org/licenses/MIT
     </SigourneyConfiguration>
   </ItemGroup>
 
-  <!--<UsingTask TaskName="SigourneyWriteNuspecTask" AssemblyFile="$(SigourneyAssembly)" />-->
+  <UsingTask Condition="$(SigourneyEnable) != false" TaskName="GetNextSentinel" AssemblyFile="$(SigourneyAssembly)" />
+  <Import Condition="$(SigourneyEnable) != false" Project="@(SigourneyRegisteredTargetFiles)" />
 
   <Target
-      Name="SigourneyCopyNugetPackageFiles"
-      Condition="$(SigourneyPublish) == true AND $(DesignTimeBuild) != true"
-      BeforeTargets="SigourneyPreparePack">
-    <ItemGroup>
-      <_NuGetPackageFiles Include="%(None.Identity)" Condition="%(None.Pack) == true">
-        <Destination>$(IntermediateDirectory)/nuget/%(None.PackagePath)</Destination>
-      </_NuGetPackageFiles>
-      <_SigourneyToAddToNuspec Include="$(IntermediateDirectory)/nuget/**/*.*" />
-    </ItemGroup>
-    <Copy
-        SourceFiles="@(_NuGetPackageFiles->'%(Identity)')"
-        DestinationFiles="@(_NuGetPackageFiles->'%(Destination)')"
-        Retries="10" />
-    <SigourneyWriteNuspecTask
-        PackageId="$(PackageId)"
-        Version="$(Version)"
-        Title="$(Title)"
-        Authors="$(Authors)"
-        Owners="$(Owners)"
-        Description="$(Description)"
-        ReleaseNotes="$(PackageReleaseNotes)"
-        Summary="$(Summary)"
-        ProjectUrl="$(PackageProjectUrl)"
-        IconUrl="$(PackageIconUrl)"
-        LicenseExpression="$(PackageLicenseExpression)"
-        LicenseFile="$(PackageLicenseFile)"
-        Copyright="$(Copyright)"
-        RequireLicenseAcceptance="$(RequireLicenseAcceptance)"
-        Tags="$(Tags)"
-        DevelopmentDependency="$(DevelopmentDependency)"
-        RepositoryType="$(PackageRepositoryType)"
-        RepositoryUrl="$(PackageRepositoryUrl)"
-        Files="@(_SigourneyToAddToNuspec)"
-        Destination="$(NuspecFile)" />
-  </Target>
-
-  <Target
-      Name="SigourneyPreparePack"
-      Condition="$(SigourneyPublish) == true AND $(DesignTimeBuild) != true"
-      BeforeTargets="GenerateNuspec"
-      DependsOnTargets="Build">
-    <Error
-        Condition="'$(TargetFramework)' == '' AND '@(TargetFrameworks)' == ''"
-        Text="You must specify a framework with the TargetFramework(s) property." />
-    <ItemGroup>
-      <_FrameworksToBuild Include="$(TargetFrameworks)" />
-      <_FrameworksToBuild Include="$(TargetFramework)" Condition="'@(_FrameworksToBuild)' == ''" />
-      <_ProjectsToPublish
-          Include="$(MSBuildProjectFullPath)"
-          AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(IntermediateDirectory)/nuget/tools/%(_FrameworksToBuild.Identity)/" />
-    </ItemGroup>
-    <RemoveDir Directories="$(IntermediateDirectory)/nuget/tools/" />
-    <MSBuild Projects="@(_ProjectsToPublish)" Properties="NoBuild=true;Configuration=$(Configuration)" Targets="Publish" BuildInParallel="$(BuildInParallel)" />
-  </Target>
-
-  <Target Name="CleanAfterPack" AfterTargets="Pack">
-    <RemoveDir Directories="$(IntermediateDirectory)/nuget/" />
+    Name="SigourneyEntryPoint"
+    Condition="$(SigourneyEnable) != false"
+    BeforeTargets="Build"
+    AfterTargets="Compile"
+    DependsOn="@(SigourneyRegisteredTargets)">
   </Target>
 </Project>

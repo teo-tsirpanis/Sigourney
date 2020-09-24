@@ -18,8 +18,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Sigourney.props" Pack="true" PackagePath="build" />
     <None Include="Sigourney.targets" Pack="true" PackagePath="build" />
-    <None Include="buildMultiTargeting/Sigourney.targets" Pack="true" PackagePath="buildMultiTargeting" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.3" />
