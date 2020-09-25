@@ -44,6 +44,11 @@ namespace Sigourney
                 keyPair = null;
                 publicKey = fileBytes;
             }
+            catch (NotSupportedException)
+            {
+                log.Warning("Sigourney does not support strong naming on some platforms like .NET Core-based MSBuild.");
+                throw;
+            }
         }
 
         private static string? GetKeyFilePath(WeaverConfig config, AssemblyDefinition asm, ILogger log)
