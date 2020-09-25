@@ -17,17 +17,13 @@ namespace Sigourney
     {
         private ILogger? _log2;
 
-        /// <inheritdoc cref="WeaverConfig.SignAssembly"/>
-        public bool SignAssembly { get; set; }
-
-        /// <inheritdoc cref="WeaverConfig.IntermediateDirectory"/>
-        public string? IntermediateDirectory { get; set; }
-
-        /// <inheritdoc cref="WeaverConfig.KeyFilePath"/>
-        public string? KeyOriginatorFile { get; set; }
-
-        /// <inheritdoc cref="WeaverConfig.KeyFilePath"/>
-        public string? AssemblyOriginatorKeyFile { get; set; }
+        /// <summary>
+        /// Additional configuration that Sigourney's internal implementation needs.
+        /// </summary>
+        /// <remarks>
+        /// In MSBuild, this task parameter should be passed as <c>@(SigourneyConfiguration)</c>.
+        /// </remarks>
+        public ITaskItem[]? Configuration { get; set; }
 
         /// <summary>
         /// The path of the assembly to weave.
@@ -79,19 +75,10 @@ namespace Sigourney
         /// <inheritdoc/>
         public override bool Execute()
         {
-            if (string.IsNullOrEmpty(IntermediateDirectory))
-            {
-                Log.LogError("The MSBuild task parameter 'IntermediateDirectory' is not specified." +
-                             " Please set it to '$(ProjectDir)$(IntermediateOutputPath)'.");
-                return false;
-            }
+            var config = WeaverConfig.TryCreate(Configuration);
 
-            var config = new WeaverConfig
-            {
-                KeyFilePath = KeyOriginatorFile ?? AssemblyOriginatorKeyFile,
-                SignAssembly = SignAssembly,
-                IntermediateDirectory = IntermediateDirectory
-            };
+            if (config == null)
+                Log.LogMessage("Something went wrong with the Configuration task parameter. Sigourney's functionality might be limited.");
             Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config);
             return !Log.HasLoggedErrors;
         }

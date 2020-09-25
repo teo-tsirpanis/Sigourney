@@ -66,9 +66,10 @@ namespace Sigourney
                 .FirstOrDefault(x => x.AttributeType.Name == "AssemblyKeyFileAttribute")
                 ?.ConstructorArguments
                 ?.First();
-            if (keyFileSuffix.HasValue)
+            var intermediateDirectory = config.IntermediateDirectory;
+            if (intermediateDirectory != null && keyFileSuffix.HasValue)
             {
-                keyFilePath = Path.Combine(config.GetIntermediateDirectory(), (string) keyFileSuffix.Value.Value);
+                keyFilePath = Path.Combine(intermediateDirectory, (string) keyFileSuffix.Value.Value);
                 log.Debug("Using strong name key from [AssemblyKeyFileAttribute(\"{KeyFileSuffix}\")] '{KeyFilePath}'",
                     keyFileSuffix, keyFilePath);
                 return keyFilePath;
