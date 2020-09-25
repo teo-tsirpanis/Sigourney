@@ -46,14 +46,13 @@ namespace Sigourney
                 var sentinelProduct = File.ReadAllText(OutputSentinel);
                 if (sentinelProduct.Equals(ProductName, StringComparison.Ordinal))
                     return;
-                Log.LogMessage("Sentinel file #{0} was found but it was for {1} instead.", idx, ProductName);
+                Log.LogMessage("Sentinel file #{0} was found but it was for the weaver named {1} instead.", idx, ProductName);
+                File.Delete(OutputSentinel);
             }
             catch (FileNotFoundException)
             {
                 Log.LogMessage("Sentinel file #{0} was not found.", idx);
             }
-
-            File.WriteAllText(OutputSentinel, ProductName);
         }
 
         /// <summary>
