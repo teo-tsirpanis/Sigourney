@@ -25,6 +25,6 @@ https://opensource.org/licenses/MIT
     Condition="$(SigourneyEnable) != false"
     BeforeTargets="Build"
     AfterTargets="Compile"
-    DependsOn="@(SigourneyRegisteredTargets)">
+    DependsOnTargets="@(SigourneyRegisteredTargets)">
   </Target>
 </Project>
