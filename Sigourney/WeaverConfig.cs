@@ -40,7 +40,7 @@ namespace Sigourney
         {
             if (IntermediateDirectory == null)
                 throw new ArgumentNullException(nameof(IntermediateDirectory),
-                    "The intermediate directory of a WeaverCongig object must not be null.");
+                    "The intermediate directory of a WeaverConfig object must not be null.");
             return IntermediateDirectory;
         }
     }

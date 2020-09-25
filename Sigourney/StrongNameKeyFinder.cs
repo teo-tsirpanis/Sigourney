@@ -17,15 +17,13 @@ namespace Sigourney
 {
     internal static class StrongNameKeyFinder
     {
-        internal static void FindStrongNameKey(WeaverConfig config, AssemblyDefinition asm, ILogger log,
+        internal static void FindStrongNameKey(WeaverConfig? config, AssemblyDefinition asm, ILogger log,
             out StrongNameKeyPair? keyPair, out byte[]? publicKey)
         {
             keyPair = null;
             publicKey = null;
-            if (!config.SignAssembly)
-            {
-                return;
-            }
+
+            if (config == null || !config.SignAssembly) return;
 
             var keyFilePath = GetKeyFilePath(config, asm, log);
             if (keyFilePath == null) return;

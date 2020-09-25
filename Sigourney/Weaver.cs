@@ -46,7 +46,7 @@ namespace Sigourney
         /// If not specified, it will be the name of the assembly
         /// in which <paramref name="fWeave"/> was declared.</param>
         public static void Weave(string inputPath, string? outputPath,
-            Func<AssemblyDefinition, bool> fWeave, ILogger log, WeaverConfig config,
+            Func<AssemblyDefinition, bool> fWeave, ILogger log, WeaverConfig? config = null,
             string? productName = null)
         {
             // The declaring type is null on "global module functions",
