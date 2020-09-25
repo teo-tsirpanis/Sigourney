@@ -26,7 +26,8 @@ namespace Sigourney
         private static string GetAssemblyVersion(Assembly asm)
         {
             return asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion ?? asm.GetName().Version.ToString();
+                // Is there any case where an assembly cannot have a version?
+                ?.InformationalVersion ?? asm.GetName().Version!.ToString();
         }
 
         /// <summary>
@@ -51,7 +52,8 @@ namespace Sigourney
             string? productName = null)
         {
             var weaverAssembly = fWeave.Method.Module.Assembly;
-            var productNameActual = productName ?? weaverAssembly.GetName().Name;
+            // Is there any case where an assembly cannot have a name?
+            var productNameActual = productName ?? weaverAssembly.GetName().Name!;
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
             using var resultingAsembly = new MemoryStream();
             using (var asm = AssemblyDefinition.ReadAssembly(inputPath))
