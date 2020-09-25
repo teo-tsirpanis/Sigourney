@@ -40,8 +40,9 @@ namespace Sigourney
         /// <param name="fWeave"><see cref="MSBuildWeaver.DoWeave"/></param>
         /// <param name="log">A Serilog <see cref="ILogger"/> that will
         /// record any events that happen in the weaver.</param>
-        /// <param name="config">A <see cref="WeaverConfig"/> object to
-        /// further parameterize the weaving process.</param>
+        /// <param name="config">A <see cref="WeaverConfig"/> object that
+        /// further parameterizes the weaving process. If not specified,
+        /// some features like strong-name signing will not be supported.</param>
         /// <param name="productName">The name of the program that weaved the assembly.
         /// If not specified, it will be the name of the assembly
         /// in which <paramref name="fWeave"/> was declared.</param>
@@ -49,9 +50,7 @@ namespace Sigourney
             Func<AssemblyDefinition, bool> fWeave, ILogger log, WeaverConfig? config = null,
             string? productName = null)
         {
-            // The declaring type is null on "global module functions",
-            // something I don't think it can happen with the known .NET languages.
-            var weaverAssembly = fWeave.Method.DeclaringType?.Assembly ?? Assembly.GetCallingAssembly();
+            var weaverAssembly = fWeave.Method.Module.Assembly;
             var productNameActual = productName ?? weaverAssembly.GetName().Name;
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
             using var resultingAsembly = new MemoryStream();
