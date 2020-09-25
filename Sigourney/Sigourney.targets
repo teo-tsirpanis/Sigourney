@@ -23,8 +23,7 @@ https://opensource.org/licenses/MIT
   <Target
     Name="SigourneyEntryPoint"
     Condition="$(SigourneyEnable) != false"
-    BeforeTargets="Build"
-    AfterTargets="Compile"
+    AfterTargets="AfterCompile"
     DependsOnTargets="@(SigourneyRegisteredTargets)">
   </Target>
 </Project>
