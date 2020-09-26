@@ -20,9 +20,6 @@ namespace Sigourney
     [PublicAPI]
     public static class Weaver
     {
-        /// <summary>
-        /// Creates a <see cref="Weaver"/>.
-        /// </summary>
         private static string GetAssemblyVersion(Assembly asm)
         {
             return asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
@@ -55,8 +52,12 @@ namespace Sigourney
             // Is there any case where an assembly cannot have a name?
             var productNameActual = productName ?? weaverAssembly.GetName().Name!;
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
-            using var resultingAsembly = new MemoryStream();
-            using (var asm = AssemblyDefinition.ReadAssembly(inputPath))
+
+            // If the output path is specified (i.e. it's not the same as the input path),
+            // we first copy the input assembly there, and then weave that new copy.
+            if (outputPath != null)
+                File.Copy(inputPath, outputPath, true);
+            using (var asm = AssemblyDefinition.ReadAssembly(outputPath ?? inputPath))
             {
                 var assemblyName = asm.Name.Name;
                 StrongNameKeyFinder.FindStrongNameKey(config, asm, log, out var keyPair, out var publicKey);
@@ -66,8 +67,6 @@ namespace Sigourney
                     if (!fWeave(asm))
                     {
                         log.Debug("Skipping weaving {AssemblyName} because nothing changed.", assemblyName);
-                        if (outputPath != null)
-                            File.Copy(inputPath, outputPath, true);
                         return;
                     }
 
@@ -77,15 +76,11 @@ namespace Sigourney
                         StrongNameKeyPair = keyPair
                     };
                     asm.Name.PublicKey = publicKey;
-                    asm.Write(resultingAsembly, writerParams);
+                    asm.Write(writerParams);
                 }
                 else
-                    log.Debug("{AssemblyName} is already weaved.", assemblyName);
+                    log.Debug("Skipping weaving {AssemblyName} because it is already weaved.", assemblyName);
             }
-
-            using var outputFile = File.Create(outputPath ?? inputPath);
-            resultingAsembly.Position = 0;
-            resultingAsembly.WriteTo(outputFile);
         }
     }
 }
