@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Sigourney</PackageId>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.1.1</Version>
     <PackageReleaseNotes>MSBuildWeaver.Log2 is properly initialized. Only MSBuildWeaver.AssemblyPath is marked as required.</PackageReleaseNotes>
     <Authors>Theodore Tsirpanis</Authors>
@@ -26,4 +26,24 @@
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.MSBuild" Version="1.2.1" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <_ToolsDirectory>$(IntermediateOutputPath)/tools</_ToolsDirectory>
+  </PropertyGroup>
+  <Target Name="PreparePack" AfterTargets="Build">
+    <ItemGroup>
+      <_FrameworksToBuild Include="$(TargetFrameworks)" />
+      <_FrameworksToBuild Include="$(TargetFramework)" Condition="'@(_FrameworksToBuild)' == ''" />
+      <_ProjectsToPublish Include="$(MSBuildThisFileFullPath)" AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(_ToolsDirectory)\%(_FrameworksToBuild.Identity)\" />
+    </ItemGroup>
+    <RemoveDir Directories="$(_ToolsDirectory)" />
+    <MSBuild Projects="@(_ProjectsToPublish)" Properties="NoBuild=true;Configuration=$(Configuration)" Targets="Publish" BuildInParallel="$(BuildInParallel)" />
+    <ItemGroup>
+      <None Include="$(_ToolsDirectory)/**" Pack="true" PackagePath="tools" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanAfterPack" AfterTargets="Clean;Pack">
+    <RemoveDir Directories="$(_ToolsDirectory)" />
+  </Target>
 </Project>
