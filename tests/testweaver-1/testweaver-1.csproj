@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SigourneyPublish>true</SigourneyPublish>
+    <Version>0.0.0-local</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="build/**" Pack="true" PackagePath="build" />
+    <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="none" ExcludeAssets="runtime" />
+  </ItemGroup>
+</Project>

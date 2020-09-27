@@ -1,0 +1,7 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TestWeaver1Assembly>$(MSBuildThisFileDirectory)../tools/netstandard2.0/TestWeaver1.dll</TestWeaver1Assembly>
+    <SigourneyRegisteredTargetFiles>$(SigourneyRegisteredTargetFiles);$(MSBuildThisFileDirectory)testweaver-1.Sigourney.targets</SigourneyRegisteredTargetFiles>
+    <SigourneyRegisteredTargets>$(SigourneyRegisteredTargets);RunTestWeaver1</SigourneyRegisteredTargets>
+  </PropertyGroup>
+</Project>
