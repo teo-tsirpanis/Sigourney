@@ -16,10 +16,11 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <SigourneyPublish>true</SigourneyPublish>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Sigourney.props" Pack="true" PackagePath="build" />
-    <None Include="Sigourney.targets" Pack="true" PackagePath="build" />
+    <None Include="build/**" Pack="true" PackagePath="build" />
+    <None Include="buildMultiTargeting/**" Pack="true" PackagePath="buildMultiTargeting" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.3" />
@@ -27,23 +28,5 @@
     <PackageReference Include="Serilog.Sinks.MSBuild" Version="1.2.1" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <_ToolsDirectory>$(IntermediateOutputPath)/tools</_ToolsDirectory>
-  </PropertyGroup>
-  <Target Name="PreparePack" AfterTargets="Build">
-    <ItemGroup>
-      <_FrameworksToBuild Include="$(TargetFrameworks)" />
-      <_FrameworksToBuild Include="$(TargetFramework)" Condition="'@(_FrameworksToBuild)' == ''" />
-      <_ProjectsToPublish Include="$(MSBuildThisFileFullPath)" AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(_ToolsDirectory)\%(_FrameworksToBuild.Identity)\" />
-    </ItemGroup>
-    <RemoveDir Directories="$(_ToolsDirectory)" />
-    <MSBuild Projects="@(_ProjectsToPublish)" Properties="NoBuild=true;Configuration=$(Configuration)" Targets="Publish" BuildInParallel="$(BuildInParallel)" />
-    <ItemGroup>
-      <None Include="$(_ToolsDirectory)/**" Pack="true" PackagePath="tools" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="CleanAfterPack" AfterTargets="Clean;Pack">
-    <RemoveDir Directories="$(_ToolsDirectory)" />
-  </Target>
+  <Import Project="build/Sigourney.PublishMode.targets" />
 </Project>

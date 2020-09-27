@@ -4,9 +4,12 @@ Copyright (c) 2020 Theodore Tsirpanis
 This software is released under the MIT License.
 https://opensource.org/licenses/MIT
 -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  TreatAsLocalProperty="_SigourneyEnable">
+  <Import Project="$(MSBuildThisFileDirectory)Sigourney.PublishMode.Targets" />
   <PropertyGroup>
     <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
+    <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
   </PropertyGroup>
   <ItemGroup>
     <SigourneyConfiguration Include="Sigourney default configuration">
@@ -17,12 +20,12 @@ https://opensource.org/licenses/MIT
     </SigourneyConfiguration>
   </ItemGroup>
 
-  <UsingTask Condition="$(SigourneyEnable) != false" TaskName="GetNextSentinel" AssemblyFile="$(SigourneyAssembly)" />
-  <Import Condition="$(SigourneyEnable) != false" Project="@(SigourneyRegisteredTargetFiles)" />
+  <UsingTask Condition="$(_SigourneyEnable) != false" TaskName="GetNextSentinel" AssemblyFile="$(SigourneyAssembly)" />
+  <Import Condition="$(_SigourneyEnable) != false" Project="@(SigourneyRegisteredTargetFiles)" />
 
   <Target
     Name="SigourneyEntryPoint"
-    Condition="$(SigourneyEnable) != false"
+    Condition="$(_SigourneyEnable) != false"
     AfterTargets="AfterCompile"
     DependsOnTargets="@(SigourneyRegisteredTargets)">
   </Target>

@@ -1,0 +1,30 @@
+<!--
+Copyright (c) 2020 Theodore Tsirpanis
+
+This software is released under the MIT License.
+https://opensource.org/licenses/MIT
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  TreatAsLocalProperty="_ToolsDirectory">
+  <PropertyGroup Condition="$(SigourneyPublish) == true">
+    <SigourneyPublishPackageTarget Condition="'$(SigourneyPublishPackageTarget)' == ''">tools</SigourneyPublishPackageTarget>
+    <_ToolsDirectory>$(IntermediateOutputPath)/tools</_ToolsDirectory>
+  </PropertyGroup>
+
+  <Target Name="PreparePack" Condition="$(SigourneyPublish) == true" AfterTargets="Build">
+    <ItemGroup>
+      <_FrameworksToBuild Include="$(TargetFrameworks)" />
+      <_FrameworksToBuild Include="$(TargetFramework)" Condition="'@(_FrameworksToBuild)' == ''" />
+      <_ProjectsToPublish Include="$(MSBuildProjectFullPath)" AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(_ToolsDirectory)\%(_FrameworksToBuild.Identity)\" />
+    </ItemGroup>
+    <RemoveDir Directories="$(_ToolsDirectory)" />
+    <MSBuild Projects="@(_ProjectsToPublish)" Properties="NoBuild=true;Configuration=$(Configuration)" Targets="Publish" BuildInParallel="$(BuildInParallel)" />
+    <ItemGroup>
+      <None Include="$(_ToolsDirectory)/**" Pack="true" PackagePath="$(SigourneyPublishPackageTarget)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanAfterPack" AfterTargets="Clean;Pack" Condition="$(SigourneyPublish) == true">
+    <RemoveDir Directories="$(_ToolsDirectory)" />
+  </Target>
+</Project>
