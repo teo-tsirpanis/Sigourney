@@ -1,0 +1,25 @@
+<!--
+Copyright (c) 2020 Theodore Tsirpanis
+
+This software is released under the MIT License.
+https://opensource.org/licenses/MIT
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test">
+  <PropertyGroup>
+    <SigourneyProject>..\Sigourney\Sigourney.csproj</SigourneyProject>
+    <LocalPackagePath>$(MSBuildThisFileDirectory)\test-packages\</LocalPackagePath>
+    <LocalPackageVersion>0.0.0-local</LocalPackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- We only want to build these projects. -->
+    <BuildTest Include="./buildtest-*/*.csproj" />
+  </ItemGroup>
+
+  <Target Name="PrepareSigourneyLocal">
+    <MSBuild Projects="$(SigourneyProject)" Targets="Pack" Properties="Version=$(LocalPackageVersion);PackageOutputPath=$(LocalPackagePath)" />
+  </Target>
+  <Target Name="RunBuildTests" DependsOnTargets="PrepareSigourneyLocal">
+    <MSBuild Projects="@(BuildTest)" Targets="Clean;Restore;Build" />
+  </Target>
+  <Target Name="Test" DependsOnTargets="RunBuildTests" />
+</Project>
