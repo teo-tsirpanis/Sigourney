@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "buildtest-empty", "tests\bu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testweaver-1", "tests\testweaver-1\testweaver-1.csproj", "{EFEB4E37-873B-48F7-9B86-7970D150DBB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigourney.Tests", "tests\Sigourney.Tests\Sigourney.Tests.csproj", "{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{EFEB4E37-873B-48F7-9B86-7970D150DBB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFEB4E37-873B-48F7-9B86-7970D150DBB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFEB4E37-873B-48F7-9B86-7970D150DBB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,5 +48,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D8BB726B-3010-4611-A5ED-7AB622066109} = {4C438E80-26DF-4599-B2FC-E30069A4B1B6}
 		{EFEB4E37-873B-48F7-9B86-7970D150DBB4} = {4C438E80-26DF-4599-B2FC-E30069A4B1B6}
+		{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7} = {4C438E80-26DF-4599-B2FC-E30069A4B1B6}
 	EndGlobalSection
 EndGlobal
