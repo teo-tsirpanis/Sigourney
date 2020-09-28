@@ -3,4 +3,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="testweaver-1" Version="0.0.0-local" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

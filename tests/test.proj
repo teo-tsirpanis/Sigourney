@@ -21,7 +21,7 @@ https://opensource.org/licenses/MIT
     <MSBuild
       Projects="@(LocalPackage)"
       BuildInParallel="$(BuildInParallel)"
-      Targets="Pack"
+      Targets="Restore;Pack"
       Properties="Version=$(LocalPackageVersion);PackageOutputPath=$(LocalPackagePath)" />
   </Target>
   <Target Name="RunBuildTests" DependsOnTargets="PrepareSigourneyLocalPackages">
