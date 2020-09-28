@@ -78,13 +78,14 @@ namespace Sigourney
         /// <summary>
         /// Sigourney's current input sentinel file path.
         /// </summary>
-        [Required, Output]
+        [Output] // The Required attribute does not mean that the
+        // parameter must be assigned, but also that must not be empty.
         public string InputSentinel { get; set; } = null!;
 
         /// <summary>
         /// Sigourney's current output sentinel file path.
         /// </summary>
-        [Required, Output]
+        [Output]
         public string OutputSentinel { get; set; } = null!;
 
         /// <inheritDoc/>
