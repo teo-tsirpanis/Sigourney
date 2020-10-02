@@ -16,7 +16,7 @@ namespace Sigourney.Tests
         {
             var colorPrevious = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine("Error: {0}", string.Format(message, fmtArgs));
+            Console.WriteLine(message, fmtArgs);
             Console.ForegroundColor = colorPrevious;
         }
 
@@ -24,7 +24,7 @@ namespace Sigourney.Tests
         {
             assertCount++;
             if (condition) return;
-            PrintInColor(ConsoleColor.Red, message);
+            PrintInColor(ConsoleColor.Red, $"Error: {message}");
             errorCount++;
         }
 

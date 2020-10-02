@@ -17,7 +17,7 @@
     <TestWeaver1
       AssemblyPath="@(IntermediateAssembly)"
       ProductName="TestWeaver1"
-      OutputSentinel="SigourneyOutputSentinel"
+      OutputSentinel="$(SigourneyOutputSentinel)"
       Configuration="@(SigourneyConfiguration)" />
   </Target>
 </Project>

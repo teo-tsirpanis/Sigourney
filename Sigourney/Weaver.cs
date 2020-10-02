@@ -57,7 +57,8 @@ namespace Sigourney
             // we first copy the input assembly there, and then weave that new copy.
             if (outputPath != null)
                 File.Copy(inputPath, outputPath, true);
-            using (var asm = AssemblyDefinition.ReadAssembly(outputPath ?? inputPath))
+            var readerParams = new ReaderParameters() {ReadWrite = true};
+            using (var asm = AssemblyDefinition.ReadAssembly(outputPath ?? inputPath, readerParams))
             {
                 var assemblyName = asm.Name.Name;
                 StrongNameKeyFinder.FindStrongNameKey(config, asm, log, out var keyPair, out var publicKey);
