@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 .idea/
-tests/test-packages/
+tests/packages/

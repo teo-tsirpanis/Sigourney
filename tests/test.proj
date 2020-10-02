@@ -6,7 +6,7 @@ https://opensource.org/licenses/MIT
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test">
   <PropertyGroup>
-    <LocalPackagePath>$(MSBuildThisFileDirectory)test-packages/</LocalPackagePath>
+    <LocalPackagePath>$(MSBuildThisFileDirectory)packages/</LocalPackagePath>
     <TestProgram>$(MSBuildThisFileDirectory)Sigourney.Tests/Sigourney.Tests.csproj</TestProgram>
     <LocalPackageVersion>0.0.0-local</LocalPackageVersion>
   </PropertyGroup>
@@ -18,18 +18,19 @@ https://opensource.org/licenses/MIT
   </ItemGroup>
 
   <Target Name="PrepareSigourneyLocalPackages">
+    <Exec Command="dotnet restore %(LocalPackage.FullPath)" />
     <MSBuild
       Projects="@(LocalPackage)"
-      BuildInParallel="$(BuildInParallel)"
-      Targets="Restore;Pack"
+      Targets="Pack"
       Properties="Version=$(LocalPackageVersion);PackageOutputPath=$(LocalPackagePath)" />
   </Target>
   <Target Name="RunBuildTests" DependsOnTargets="PrepareSigourneyLocalPackages">
-    <MSBuild Projects="@(BuildTest)" BuildInParallel="$(BuildInParallel)" Targets="Restore;Build" />
+    <MSBuild Projects="@(BuildTest)" Targets="Restore;Build" />
   </Target>
 
   <Target Name="BuildTestProgram" DependsOnTargets="PrepareSigourneyLocalPackages">
-    <MSBuild Projects="$(TestProgram)" Targets="Restore;Build" />
+    <Exec Command="dotnet restore $(TestProgram)" />
+    <MSBuild Projects="$(TestProgram)" Targets="Build" />
   </Target>
   <Target Name="RunTestProgram" DependsOnTargets="BuildTestProgram">
     <Exec Command="dotnet run -p $(TestProgram) --no-build" />
