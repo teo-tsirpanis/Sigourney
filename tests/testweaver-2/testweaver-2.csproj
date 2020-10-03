@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SigourneyPublish>true</SigourneyPublish>
+    <Version>0.0.0-local</Version>
+    <!-- NU5128 (not verbatim): We are depending on a package but this package does not provide a library
+    because we disabled IncludeBuildOutput above.-->
+    <!-- NU5129: At least one .targets file was found in 'build/', but 'build/testweaver-1.targets' was not.
+    This is not a problem here since we didn't create an additional targets file. -->
+    <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="build/**" Pack="true" PackagePath="build" />
+    <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="compile" />
+  </ItemGroup>
+</Project>

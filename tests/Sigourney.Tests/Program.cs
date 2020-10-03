@@ -33,6 +33,8 @@ namespace Sigourney.Tests
             var thisAssembly = typeof(Program).Assembly;
             Assert(thisAssembly.GetType("TestWeaver1Rulez") != null, "The type weaver #1 added was not found.");
             Assert(thisAssembly.GetType("ProcessedByTestWeaver1") != null, "The type Sigourney added to mark weaver #1 was not found.");
+            Assert(thisAssembly.GetType("TestWeaver2IzBetter") != null, "The type weaver #2 added was not found.");
+            Assert(thisAssembly.GetType("ProcessedByTestWeaver2") != null, "The type Sigourney added to mark weaver #2 was not found.");
 
             if (errorCount == 0)
             {
