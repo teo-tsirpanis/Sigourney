@@ -25,13 +25,17 @@ namespace Sigourney
     {
 
         private static readonly Regex _sentinelFileRegex =
-            new Regex(@"ProcessedBySigourney\.(\d)+$", RegexOptions.Compiled);
+            new Regex(@"ProcessedBySigourney\.(\d+)$", RegexOptions.Compiled);
 
         private int GetSentinelIndex(string sentinelFile)
         {
             var match = _sentinelFileRegex.Match(sentinelFile);
             if (match.Success)
-                return int.Parse(match.Groups[0].Value);
+            {
+                var number = match.Groups[1].Value;
+                Log.LogMessage("Sentinel index recognized as {0}.", number);
+                return int.Parse(number);
+            }
             Log.LogError("Sentinel file {0} is not recognized.", sentinelFile);
             return -1;
         }
