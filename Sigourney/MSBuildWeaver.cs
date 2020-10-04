@@ -100,7 +100,7 @@ namespace Sigourney
         {
             if (!string.IsNullOrEmpty(OutputSentinel) && string.IsNullOrEmpty(ProductName))
             {
-                Log.LogError("The ProductName property must not be empty if the OutputSentinel property isn't.");
+                Log.LogError("The ProductName property must be set if the OutputSentinel property is too.");
                 return false;
             }
 

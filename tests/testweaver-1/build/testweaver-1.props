@@ -1,7 +1,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <!-- It's a common practice to define the path of the assembly with a task here,
+    in the props file. The project file can override it by setting the property again. -->
     <TestWeaver1Assembly>$(MSBuildThisFileDirectory)../tools/netstandard2.0/testweaver-1.dll</TestWeaver1Assembly>
+    <!-- We register the targets file that contains the weaver. Sigourney will import it at the correct place. -->
     <SigourneyRegisteredTargetFiles>$(SigourneyRegisteredTargetFiles);$(MSBuildThisFileDirectory)testweaver-1.Sigourney.targets</SigourneyRegisteredTargetFiles>
+    <!-- We also have to register the target that will execute the weaving task. -->
     <SigourneyRegisteredTargets>$(SigourneyRegisteredTargets);RunTestWeaver1</SigourneyRegisteredTargets>
   </PropertyGroup>
 </Project>

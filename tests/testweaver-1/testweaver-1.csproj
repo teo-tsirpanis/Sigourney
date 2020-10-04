@@ -1,17 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- With this switch, Sigourney will pack the weaver with its dependencies
+    and place it in a "tools" folder. If the weaver was multitargeted, it supports
+    it as well. The package path can be customized with the "SigourneyPublishPackageTarget"
+    property. This option is useful for any MSBuild task package even when it's not using Sigourney. -->
     <SigourneyPublish>true</SigourneyPublish>
+    <!-- We don't want the weaver to be packed as a library too, under the "lib" folder. -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <Version>0.0.0-local</Version>
     <!-- NU5128 (not verbatim): We are depending on a package but this package does not provide a library
-    because we disabled IncludeBuildOutput above.-->
+    because we disabled IncludeBuildOutput above. -->
     <!-- NU5129: At least one .targets file was found in 'build/', but 'build/testweaver-1.targets' was not.
     This is not a problem here since we didn't create an additional targets file. -->
     <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Include="build/**" Pack="true" PackagePath="build" />
+    <!-- The PrivateAssets attribute says that we don't want any package using this weaver to automatically use
+    Sigourney as a library. Consumers of the weaver can override it by adding Sigourney as a reference themselves. -->
     <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="compile" />
   </ItemGroup>
 </Project>
