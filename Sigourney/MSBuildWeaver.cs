@@ -31,9 +31,9 @@ namespace Sigourney
         /// <remarks>
         /// It has to be set if multiple weavers exist in the same assembly,
         /// or the sentinel API is used. In the latter case, its value must
-        /// be the same with the one passed in <see cref="GetNextSentinel.ProductName"/>.
+        /// be the same with the one passed in <see cref="GetNextSentinel.WeaverName"/>.
         /// </remarks>
-        public string? ProductName { get; set; }
+        public string? WeaverName { get; set; }
 
         /// <summary>
         /// The path to save the weaved assembly.
@@ -47,8 +47,8 @@ namespace Sigourney
         /// </summary>
         /// <remarks>
         /// After weaving the assembly, Sigourney will create a file
-        /// in this path, containing <see cref="ProductName"/>.
-        /// If this parameter is set, <see cref="ProductName"/> must
+        /// in this path, containing <see cref="WeaverName"/>.
+        /// If this parameter is set, <see cref="WeaverName"/> must
         /// be set as well or the build will fail.
         /// </remarks>
         /// <seealso cref="GetNextSentinel"/>
@@ -98,9 +98,9 @@ namespace Sigourney
         /// <inheritdoc/>
         public override bool Execute()
         {
-            if (!string.IsNullOrEmpty(OutputSentinel) && string.IsNullOrEmpty(ProductName))
+            if (!string.IsNullOrEmpty(OutputSentinel) && string.IsNullOrEmpty(WeaverName))
             {
-                Log.LogError("The ProductName property must be set if the OutputSentinel property is too.");
+                Log.LogError("The WeaverName property must be set if the OutputSentinel property is too.");
                 return false;
             }
 
@@ -108,10 +108,10 @@ namespace Sigourney
             if (config == null)
                 Log.LogMessage("Something went wrong with the Configuration task parameter. Sigourney's functionality might be limited.");
 
-            Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config, ProductName);
+            Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config, WeaverName);
 
             if (!string.IsNullOrEmpty(OutputSentinel) && !Log.HasLoggedErrors)
-                File.WriteAllText(OutputSentinel, ProductName!);
+                File.WriteAllText(OutputSentinel, WeaverName!);
             return !Log.HasLoggedErrors;
         }
     }

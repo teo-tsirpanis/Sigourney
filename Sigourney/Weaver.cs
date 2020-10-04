@@ -30,7 +30,7 @@ namespace Sigourney
         /// <summary>
         /// Weaves an assembly.
         /// </summary>
-        /// <remarks>If weaving succeeds, a static class named "ProcessedBy<paramref name="productName"/>"
+        /// <remarks>If weaving succeeds, a static class named "ProcessedBy<paramref name="weaverName"/>"
         /// will be placed to the assembly, to instruct Sigourney not to weave it again.</remarks>
         /// <param name="inputPath">The path of the assembly to weave.</param>
         /// <param name="outputPath">The path where the weaved assembly will be stored.
@@ -41,18 +41,18 @@ namespace Sigourney
         /// <param name="config">A <see cref="WeaverConfig"/> object that
         /// further parameterizes the weaving process. If not specified,
         /// some features like strong-name signing will not be supported.</param>
-        /// <param name="productName">The name of the program that weaved the assembly.
+        /// <param name="weaverName">The name of the program that weaved the assembly.
         /// If not specified, it will be the name of the assembly
         /// in which <paramref name="fWeave"/> was declared.</param>
         public static void Weave(string inputPath, string? outputPath,
             Func<AssemblyDefinition, bool> fWeave, ILogger log, WeaverConfig? config = null,
-            string? productName = null)
+            string? weaverName = null)
         {
             var weaverAssembly = fWeave.Method.Module.Assembly;
             // Is there any case where an assembly cannot have a name?
-            var productNameActual = productName ?? weaverAssembly.GetName().Name!;
-            if (productName == null)
-                log.Debug("No product name was supplied; it is inferred from the weaving delegate's assembly to be {ProductName}", productNameActual);
+            var weaverNameActual = weaverName ?? weaverAssembly.GetName().Name!;
+            if (weaverName == null)
+                log.Debug("No weaver name was supplied; it is inferred from the weaving delegate's assembly to be {WeaverName}", weaverNameActual);
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
 
             // If the output path is specified (i.e. it's not the same as the input path),
@@ -65,7 +65,7 @@ namespace Sigourney
                 var assemblyName = asm.Name.Name;
                 StrongNameKeyFinder.FindStrongNameKey(config, asm, log, out var keyPair, out var publicKey);
 
-                if (AssemblyMarker.ShouldProcess(asm, productNameActual))
+                if (AssemblyMarker.ShouldProcess(asm, weaverNameActual))
                 {
                     if (!fWeave(asm))
                     {
@@ -75,7 +75,7 @@ namespace Sigourney
 
                     log.Debug("Weaving {AssemblyName} succeeded.", assemblyName);
 
-                    AssemblyMarker.MarkAsProcessed(asm, productNameActual, assemblyVersion, log);
+                    AssemblyMarker.MarkAsProcessed(asm, weaverNameActual, assemblyVersion, log);
                     var writerParams = new WriterParameters
                     {
                         StrongNameKeyPair = keyPair
@@ -84,7 +84,7 @@ namespace Sigourney
                     asm.Write(writerParams);
                 }
                 else
-                    log.Debug("Skipping weaving {AssemblyName} because it already has a type named ProcessedBy{ProductName}.", assemblyName);
+                    log.Debug("Skipping weaving {AssemblyName} because it already has a type named ProcessedBy{WeaverName}.", assemblyName);
             }
         }
     }

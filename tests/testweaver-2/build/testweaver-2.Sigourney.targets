@@ -4,7 +4,7 @@
   <Target Name="PrepareTestWeaver2" BeforeTargets="RunTestWeaver2">
     <GetNextSentinel
       IntermediateDirectory="$(IntermediateDirectory)"
-      ProductName="TestWeaver2"
+      WeaverName="TestWeaver2"
       AssemblyPath="@(IntermediateAssembly)"
       InputSentinel="$(SigourneyInputSentinel)"
       OutputSentinel="$(SigourneyOutputSentinel)">
@@ -16,7 +16,7 @@
   <Target Name="RunTestWeaver2" Inputs="$(SigourneyInputSentinel)" Outputs="$(SigourneyOutputSentinel)">
     <TestWeaver2
       AssemblyPath="@(IntermediateAssembly)"
-      ProductName="TestWeaver2"
+      WeaverName="TestWeaver2"
       OutputSentinel="$(SigourneyOutputSentinel)"
       Configuration="@(SigourneyConfiguration)" />
   </Target>

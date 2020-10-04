@@ -11,12 +11,12 @@ testweaver-1.props, Sigourney will make sure this file is imported where it shou
   how it works by taking a look at the GetNextSentinel.cs file in Sigourney's sources. -->
   <Target Name="PrepareTestWeaver1" BeforeTargets="RunTestWeaver1">
     <!-- The invocation of the following task should be viewed as more of a boilerplate
-    and be copied almost verbatim, apart from the value of the ProductName parameter which
+    and be copied almost verbatim, apart from the value of the WeaverName parameter which
     has to be unique among the weavers of a project. You can learn how it works by taking a
     look at the GetNextSentinel.cs file in Sigourney's sources. -->
     <GetNextSentinel
       IntermediateDirectory="$(IntermediateDirectory)"
-      ProductName="TestWeaver1"
+      WeaverName="TestWeaver1"
       AssemblyPath="@(IntermediateAssembly)"
       InputSentinel="$(SigourneyInputSentinel)"
       OutputSentinel="$(SigourneyOutputSentinel)">
@@ -28,14 +28,14 @@ testweaver-1.props, Sigourney will make sure this file is imported where it shou
   <!-- And now the weaver itself. Its inputs and outputs were set by the target above. -->
   <Target Name="RunTestWeaver1" Inputs="$(SigourneyInputSentinel)" Outputs="$(SigourneyOutputSentinel)">
     <!-- Sigourney's MSBuildWeaver class defines some properties, of which only
-    the AssemblyPath is required. ProductName must be the same with the ProductName
+    the AssemblyPath is required. WeaverName must be the same with the WeaverName
     passed in the GetNextSentinel task above. The other two properties are boilerplate;
     OutputSentinel is used to create the target's output file and Configuration is a
     blackbox that allows passing additional properties (to support features like
     strong-naming) in a backwards-compatible way. -->
     <TestWeaver1
       AssemblyPath="@(IntermediateAssembly)"
-      ProductName="TestWeaver1"
+      WeaverName="TestWeaver1"
       OutputSentinel="$(SigourneyOutputSentinel)"
       Configuration="@(SigourneyConfiguration)" />
   </Target>

@@ -47,10 +47,10 @@ namespace Sigourney
         {
             try
             {
-                var sentinelProduct = File.ReadAllText(OutputSentinel);
-                if (sentinelProduct.Equals(ProductName, StringComparison.Ordinal))
+                var sentinelContent = File.ReadAllText(OutputSentinel);
+                if (sentinelContent.Equals(WeaverName, StringComparison.Ordinal))
                     return;
-                Log.LogMessage("Sentinel file #{0} was found but it was for the weaver named {1} instead.", idx, ProductName);
+                Log.LogMessage("Sentinel file #{0} was found but it was for the weaver named {1} instead.", idx, WeaverName);
                 File.Delete(OutputSentinel);
             }
             catch (FileNotFoundException)
@@ -68,10 +68,8 @@ namespace Sigourney
         /// <summary>
         /// A unique name that identifies the weaver.
         /// </summary>
-        /// <remarks>It's unrelated to the product name that is passed
-        /// as a parameter in <see cref="Weaver.Weave"/>.</remarks>
         [Required]
-        public string ProductName { get; set; } = null!;
+        public string WeaverName { get; set; } = null!;
 
         /// <summary>
         /// The assembly's path.

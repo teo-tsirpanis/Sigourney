@@ -5,18 +5,18 @@ namespace Sigourney
 {
     internal static class AssemblyMarker
     {
-        private static string GetProcessedByClassName(string productName) =>
-            "ProcessedBy" + productName.Replace('.', '_');
+        private static string GetProcessedByClassName(string weaverName) =>
+            "ProcessedBy" + weaverName.Replace('.', '_');
 
-        internal static bool ShouldProcess(AssemblyDefinition asm, string productName)
+        internal static bool ShouldProcess(AssemblyDefinition asm, string weaverName)
         {
-            var name = GetProcessedByClassName(productName);
+            var name = GetProcessedByClassName(weaverName);
             return asm.MainModule.GetType(name) == null;
         }
 
-        internal static void MarkAsProcessed(AssemblyDefinition asm, string productName, string version, ILogger log)
+        internal static void MarkAsProcessed(AssemblyDefinition asm, string weaverName, string version, ILogger log)
         {
-            var name = GetProcessedByClassName(productName);
+            var name = GetProcessedByClassName(weaverName);
 
             log.Debug("Adding the {ProcessedBy} class.", name);
             const TypeAttributes typeAttributes =
@@ -28,7 +28,7 @@ namespace Sigourney
                                                     FieldAttributes.Static |
                                                     FieldAttributes.HasDefault;
             var fieldDefinition =
-                new FieldDefinition(productName + "Version", fieldAttributes, asm.MainModule.TypeSystem.String)
+                new FieldDefinition(weaverName + "Version", fieldAttributes, asm.MainModule.TypeSystem.String)
                 {
                     Constant = version
                 };
