@@ -35,7 +35,8 @@ namespace Sigourney
         /// <param name="inputPath">The path of the assembly to weave.</param>
         /// <param name="outputPath">The path where the weaved assembly will be stored.
         /// Defaults to <paramref name="inputPath"/> if null.</param>
-        /// <param name="fWeave"><see cref="MSBuildWeaver.DoWeave"/></param>
+        /// <param name="fWeave">A delegate that performs the actual weaving. If it returns
+        /// <see langword="false"/>, weaving will stop and the assembly will not be modified.</param>
         /// <param name="log">A Serilog <see cref="ILogger"/> that will
         /// record any events that happen in the weaver.</param>
         /// <param name="config">A <see cref="WeaverConfig"/> object that

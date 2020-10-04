@@ -1,15 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>Sigourney</PackageId>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1.1</Version>
-    <PackageReleaseNotes>MSBuildWeaver.Log2 is properly initialized. Only MSBuildWeaver.AssemblyPath is marked as required.</PackageReleaseNotes>
+    <PackageId>Sigourney</PackageId>
+    <Version>0.2.0</Version>
+    <Description>A lightweight toolkit that helps easily writing .NET assembly weavers.</Description>
     <Authors>Theodore Tsirpanis</Authors>
     <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License. Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
+    <PackageReleaseNotes>Introduce a new API for writing MSBuild-integrated weavers.
+Take a look at the repository's README to learn how to use it.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/teo-tsirpanis/Sigourney</PackageProjectUrl>
+    <PackageTags>ILWeaving;Sigourney;Cecil</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageTags>ILWeaving;Cecil</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
@@ -28,6 +30,5 @@
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.MSBuild" Version="1.2.1" />
   </ItemGroup>
-
   <Import Project="build/Sigourney.PublishMode.targets" />
 </Project>
