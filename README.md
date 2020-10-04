@@ -1,6 +1,7 @@
 # Sigourney
 
 [![NuGet](https://img.shields.io/nuget/v/Sigourney)][nuget]
+[![.NET Build Status](https://img.shields.io/appveyor/ci/teo-tsirpanis/Sigourney/master.svg)][sigourney]
 
 Sigourney is a lightweight toolkit that helps developers write weavers, tools that modify other .NET assemblies using [Mono.Cecil][cecil].
 
@@ -109,6 +110,7 @@ The code that handles strong-named assemblies was originally copied from Fody. I
 * [__@teo-tsirpanis__](https://github.com/teo-tsirpanis)
 
 [nuget]: https://nuget.org/packages/Sigourney
+[sigourney]: https://ci.appveyor.com/project/teo-tsirpanis/sigourney
 [cecil]: https://github.com/jbevain/cecil
 [farkle]: https://github.com/teo-tsirpanis/Farkle
 [farkle-precompiler]: https://teo-tsirpanis.github.io/Farkle/the-precompiler.html
