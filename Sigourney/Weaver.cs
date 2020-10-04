@@ -51,6 +51,8 @@ namespace Sigourney
             var weaverAssembly = fWeave.Method.Module.Assembly;
             // Is there any case where an assembly cannot have a name?
             var productNameActual = productName ?? weaverAssembly.GetName().Name!;
+            if (productName == null)
+                log.Debug("No product name was supplied; it is inferred from the weaving delegate's assembly to be {ProductName}", productNameActual);
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
 
             // If the output path is specified (i.e. it's not the same as the input path),
@@ -67,9 +69,11 @@ namespace Sigourney
                 {
                     if (!fWeave(asm))
                     {
-                        log.Debug("Skipping weaving {AssemblyName} because nothing changed.", assemblyName);
+                        log.Debug("Skipping weaving {AssemblyName} because the weaving function returned false.", assemblyName);
                         return;
                     }
+
+                    log.Debug("Weaving {AssemblyName} succeeded.", assemblyName);
 
                     AssemblyMarker.MarkAsProcessed(asm, productNameActual, assemblyVersion, log);
                     var writerParams = new WriterParameters
@@ -80,7 +84,7 @@ namespace Sigourney
                     asm.Write(writerParams);
                 }
                 else
-                    log.Debug("Skipping weaving {AssemblyName} because it is already weaved.", assemblyName);
+                    log.Debug("Skipping weaving {AssemblyName} because it already has a type named ProcessedBy{ProductName}.", assemblyName);
             }
         }
     }
