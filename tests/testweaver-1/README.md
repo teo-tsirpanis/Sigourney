@@ -1,6 +1,6 @@
 # A sample weaver
 
-This folder contains a sample weaver powered by Sigourney, with MSBuild integration.
+This folder contains a sample weaver powered by Sigourney, with MSBuild integration. It doesn't do anything useful, just adds one type to assert its dominance.
 
 ## The files
 
@@ -15,3 +15,11 @@ The weaver is made of these files:
   __Important:__ This file is deliberately not named `testweaver-1.targets`. It __MUST NOT__ be automatically imported by NuGet. Instead, it is registered in `testweaver-1.props` and imported by Sigourney in the right place.
 
 All these files are extensively commented. There is also a project named `testweaver-2` which is used to verify that Sigourney works with more than one weaver in the same project. It's almost identical to this weaver, but not commented at all.
+
+## How you would have used it
+
+```xml
+<ItemGroup>
+  <PackageReference Include="testweaver-1" Version="0.0.0-local" PrivateAssets="all" />
+</ItemGroup>
+```
