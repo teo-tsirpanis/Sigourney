@@ -43,7 +43,7 @@ namespace Sigourney.Tests
             }
             else
             {
-                PrintInColor(ConsoleColor.Red, "Failure. {0} out of {1} asserts failed.", assertCount, errorCount);
+                PrintInColor(ConsoleColor.Red, "Failure. {0} out of {1} asserts failed.", errorCount, assertCount);
                 return 1;
             }
         }
