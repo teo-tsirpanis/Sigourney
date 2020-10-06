@@ -50,10 +50,15 @@ namespace Sigourney
             string? weaverName = null)
         {
             var weaverAssembly = fWeave.Method.Module.Assembly;
-            // Is there any case where an assembly cannot have a name?
-            var weaverNameActual = weaverName ?? weaverAssembly.GetName().Name!;
-            if (weaverName == null)
+            string weaverNameActual;
+            if (string.IsNullOrEmpty(weaverName))
+            {
+                // Is there any case where an assembly cannot have a name?
+                weaverNameActual = weaverAssembly.GetName().Name!;
                 log.Debug("No weaver name was supplied; it is inferred from the weaving delegate's assembly to be {WeaverName}", weaverNameActual);
+            }
+            else
+                weaverNameActual = weaverName!;
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
 
             // If the output path is specified (i.e. it's not the same as the input path),
