@@ -351,3 +351,6 @@ MigrationBackup/
 
 .idea/
 tests/packages/
+
+test-logs/
+test-logs.zip
