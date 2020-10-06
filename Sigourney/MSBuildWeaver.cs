@@ -95,23 +95,34 @@ namespace Sigourney
         /// specified, the input assembly will be copied there as-is.</returns>
         protected abstract bool DoWeave(AssemblyDefinition asm);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Checks the task parameters for any errors and weaves the assembly at
+        /// <see cref="AssemblyPath"/>. The overriden <see cref="DoWeave"/> might
+        /// be called if needed.
+        /// </summary>
+        /// <returns>
+        /// Whether any error has been logged by either
+        /// <see cref="Task.Log"/> or <see cref="Log2"/>.
+        /// </returns>
         public override bool Execute()
         {
             if (!string.IsNullOrEmpty(OutputSentinel) && string.IsNullOrEmpty(WeaverName))
             {
-                Log.LogError("The WeaverName property must be set if the OutputSentinel property is too.");
+                Log.LogError("The WeaverName property must be set if the OutputSentinel property is set too.");
                 return false;
             }
 
             var config = WeaverConfig.TryCreate(Configuration);
             if (config == null)
-                Log.LogMessage("Something went wrong with the Configuration task parameter. Sigourney's functionality might be limited.");
+                Log.LogWarning("Something went wrong with the weaver's Configuration task parameter. Please set it to @(SigourneyConfiguration). Sigourney's functionality might be limited.");
 
             Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config, WeaverName);
 
             if (!string.IsNullOrEmpty(OutputSentinel) && !Log.HasLoggedErrors)
                 File.WriteAllText(OutputSentinel, WeaverName!);
+
+            // Log2 internally uses Log to send the logging events.
+            // Any error Log2 might send counts towards Log.HasLoggedErrors.
             return !Log.HasLoggedErrors;
         }
     }
