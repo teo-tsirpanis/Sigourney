@@ -10,7 +10,7 @@ Sigourney is a lightweight toolkit that helps developers write weavers, tools th
 At the moment, Sigourney is known to be used by two projects, both of them developed by Sigourney's author.
 
 * [Covarsky][covarsky], a tool that brings co(ntra)variance in languages that don't support it like F#.
-* [Farkle][farkle], an LALR parsing library uses Sigourney for [its grammar precompiler][farkle-precompiler].
+* [Farkle][farkle], an LALR parsing library that uses Sigourney for [its grammar precompiler][farkle-precompiler].
 
 If your project uses Sigourney, feel free to open a pull request to add it to the list.
 
@@ -97,7 +97,10 @@ Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y
 
 ## Known issues
 
-* Sigourney's MSBuild integration does not fully support incremental builds on projects that use more than one weaver.
+*
+  Sigourney's MSBuild integration does not fully support incremental builds on projects that use more than one weaver.
+
+  Since Sigourney already supports incremental weaving through the `ProcessedBy` classes, fixing this issue has a low priority. Anybody interested can feel free to propose a solution.
 
 ## License
 
