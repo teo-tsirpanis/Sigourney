@@ -10,16 +10,18 @@ namespace Sigourney
     /// Gets the names of Sigourney's sentinel files for the next weaver.
     /// </summary>
     /// <remarks>
-    /// To support incremental builds, Sigourney uses little files called sentinels. Sentinels are represented by
-    /// two MSBuild properties called <c>SigourneyInputSentinel</c> and <c>SigourneyOutputSentinel</c>.
-    /// Each weaver a project uses corresponds to one sentinel file. The sentinel for the first weaver
-    /// is called <c>ProcessedBySigourney.0</c> and so on. When the weaver finishes its job, it creates
-    /// a sentinel with the corresponding index in the <c>obj/</c> directory. The weaver's MSBuild target's
-    /// input is set to the input setinel and the output, to the output sentinel, establishing a temporal chain of
-    /// dependencies between the weavers, convinving MSBuild that a weaver does not need to run again.
-    /// Before a weaving target is executed, an auxilary target calls this task and updates the paths of these sentinel
-    /// files. When the first weaver starts, both properties are empty. In this case, this task will set the input
-    /// sentinel to the compiled assembly, and the output sentinel to the first one. This is how this chain is formed.
+    /// <para>To support incremental builds across projects that use multiple weavers,
+    /// Sigourney uses two properties named <c>SigourneyInputSentinel</c> and
+    /// <c>SigourneyOutputSentinel</c>. Each target that calls an <see cref="MSBuildWeaver"/>
+    /// descendant has to set the former as its input and the latter as its output.
+    /// Before such target runs, another target has to run that runs this task that
+    /// updates these two properties.</para>
+    /// <para>Now, what's a sentinel. Sentinels are little temporary files that
+    /// correspond to each weaver that gets executed in a project build. How they
+    /// exactly work is an implementation detail but with their help MSBuild can
+    /// entirely skip weaving targets when they are not needed to run.</para>
+    /// <para>Even without the sentinels, Sigourney itself will not weave an assembly
+    /// that has already been weaved, thanks to the <c>ProcessedBy</c> class it always adds.</para>
     /// </remarks>
     public class GetNextSentinel : Task
     {
@@ -80,15 +82,15 @@ namespace Sigourney
         /// <summary>
         /// Sigourney's current input sentinel file path.
         /// </summary>
-        [Output] // The Required attribute does not mean that the
-        // parameter must be assigned, but also that must not be empty.
-        public string InputSentinel { get; set; } = null!;
+        [Output] // The Required attribute does not only mean that the
+        // parameter must be assigned, but also that it must not be empty.
+        public string InputSentinel { get; set; } = "";
 
         /// <summary>
         /// Sigourney's current output sentinel file path.
         /// </summary>
         [Output]
-        public string OutputSentinel { get; set; } = null!;
+        public string OutputSentinel { get; set; } = "";
 
         /// <inheritDoc/>
         public override bool Execute()
