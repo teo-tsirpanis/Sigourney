@@ -10,6 +10,7 @@ https://opensource.org/licenses/MIT
   <PropertyGroup>
     <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
     <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
+    <CleanDependsOn>$(CleanDependsOn);SigourneyCleanSentinels</CleanDependsOn>
   </PropertyGroup>
   <ItemGroup>
     <SigourneyConfiguration Include="Sigourney default configuration">
@@ -30,5 +31,12 @@ https://opensource.org/licenses/MIT
     Condition="$(_SigourneyEnable) != false AND '$(SigourneyRegisteredTargets)' != ''"
     AfterTargets="AfterCompile"
     DependsOnTargets="$(SigourneyRegisteredTargets)">
+  </Target>
+
+  <Target Name="SigourneyCleanSentinels">
+    <ItemGroup>
+      <_SigourneyAllSentinels Include="$(IntermediateDirectory)ProcessedBySigourney.*" />
+    </ItemGroup>
+    <Delete Files="@(_SigourneyAllSentinels)" />
   </Target>
 </Project>
