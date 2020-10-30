@@ -17,8 +17,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="build/**" Pack="true" PackagePath="build" />
-    <!-- The PrivateAssets attribute says that we don't want any package using this weaver to automatically use
-    Sigourney as a library. Consumers of the weaver can override it by adding Sigourney as a reference themselves. -->
+    <!-- The PrivateAssets attribute says that we don't want any package using this weaver
+    to automatically use Sigourney as a library. Consumers of the weaver can override it
+    by adding Sigourney as a reference themselves. Version 0.0.0-local is not on NuGet;
+    it's a special version for local testing. -->
     <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="compile" />
   </ItemGroup>
 </Project>
