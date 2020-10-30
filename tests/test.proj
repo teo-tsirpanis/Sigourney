@@ -7,17 +7,18 @@ https://opensource.org/licenses/MIT
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test">
   <PropertyGroup>
     <LocalPackagePath>$(MSBuildThisFileDirectory)packages/</LocalPackagePath>
-    <SigourneyLibrary>../Sigourney/Sigourney.csproj</SigourneyLibrary>
+    <SigourneyLibrary>$(MSBuildThisFileDirectory)../Sigourney/Sigourney.csproj</SigourneyLibrary>
     <TestProgram>$(MSBuildThisFileDirectory)Sigourney.Tests/Sigourney.Tests.csproj</TestProgram>
     <LocalPackageVersion>0.0.0-local</LocalPackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- We only want to build these projects. -->
     <BuildTest Include="./buildtest-*/*.csproj" />
-    <LocalPackage Include="testweaver-*/*.csproj" />
+    <LocalPackage Include="./testweaver-*/*.csproj" />
   </ItemGroup>
 
   <Target Name="PrepareSigourneyLocalPackages">
+    <MakeDir Directories="$(LocalPackagePath)" />
     <Exec Command="dotnet restore $(SigourneyLibrary)" />
     <MSBuild
       Projects="$(SigourneyLibrary)"
@@ -39,6 +40,11 @@ https://opensource.org/licenses/MIT
   </Target>
   <Target Name="RunTestProgram" DependsOnTargets="BuildTestProgram">
     <Exec Command="dotnet run -p $(TestProgram) --no-build" />
+  </Target>
+
+  <Target Name="Clean">
+    <MSBuild Projects="@(BuildTest);@(LocalPackage);$(TestProgram)" Targets="Clean" />
+    <RemoveDir Directories="$(LocalPackagePath)" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="RunBuildTests;RunTestProgram" />
