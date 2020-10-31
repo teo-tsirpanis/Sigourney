@@ -12,25 +12,29 @@ https://opensource.org/licenses/MIT
     <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
     <CleanDependsOn>$(CleanDependsOn);SigourneyCleanSentinels</CleanDependsOn>
   </PropertyGroup>
-  <ItemGroup>
-    <SigourneyConfiguration Include="Sigourney default configuration">
-      <SignAssembly>$(SignAssembly)</SignAssembly>
-      <IntermediateDirectory>$(IntermediateDirectory)</IntermediateDirectory>
-      <KeyOriginatorFile>$(KeyOriginatorFile)</KeyOriginatorFile>
-      <AssemblyOriginatorKeyFile>$(AssemblyOriginatorKeyFile)</AssemblyOriginatorKeyFile>
-    </SigourneyConfiguration>
-  </ItemGroup>
 
   <UsingTask Condition="$(_SigourneyEnable) != false" TaskName="GetNextSentinel" AssemblyFile="$(SigourneyAssembly)" />
   <Import
     Condition="$(_SigourneyEnable) != false AND '$(SigourneyRegisteredTargetFiles)' != ''"
     Project="$(SigourneyRegisteredTargetFiles)" />
 
+  <Target Name="SigourneyLoadConfiguration">
+    <ItemGroup>
+      <SigourneyConfiguration Include="Sigourney default configuration">
+        <SignAssembly>$(SignAssembly)</SignAssembly>
+        <IntermediateDirectory>$(IntermediateDirectory)</IntermediateDirectory>
+        <KeyOriginatorFile>$(KeyOriginatorFile)</KeyOriginatorFile>
+        <AssemblyOriginatorKeyFile>$(AssemblyOriginatorKeyFile)</AssemblyOriginatorKeyFile>
+        <References>@(ReferencePath)</References>
+      </SigourneyConfiguration>
+    </ItemGroup>
+  </Target>
+
   <Target
     Name="SigourneyEntryPoint"
     Condition="$(_SigourneyEnable) != false AND '$(SigourneyRegisteredTargets)' != ''"
     AfterTargets="AfterCompile"
-    DependsOnTargets="$(SigourneyRegisteredTargets)">
+    DependsOnTargets="SigourneyLoadConfiguration;$(SigourneyRegisteredTargets)">
   </Target>
 
   <Target Name="SigourneyCleanSentinels">

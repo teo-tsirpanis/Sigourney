@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using JetBrains.Annotations;
@@ -16,7 +18,21 @@ namespace Sigourney
     [PublicAPI]
     public abstract class MSBuildWeaver : Task
     {
+        private static readonly List<AssemblyReference> _emptyReferenceList = new List<AssemblyReference>();
+
         private ILogger? _log2;
+
+        private readonly Lazy<WeaverConfig?> _configThunk;
+
+        /// <summary>
+        /// Creates an <see cref="MSBuildWeaver"/>.
+        /// </summary>
+        public MSBuildWeaver()
+        {
+            // We assume that the Configuration items are
+            // not modified by user code; they are a black box.
+            _configThunk = new Lazy<WeaverConfig?>(() => WeaverConfig.TryCreate(Configuration));
+        }
 
         /// <summary>
         /// The path of the assembly to weave.
@@ -61,6 +77,12 @@ namespace Sigourney
         /// In MSBuild, this task parameter should be passed as <c>@(SigourneyConfiguration)</c>.
         /// </remarks>
         public ITaskItem[]? Configuration { get; set; }
+
+        /// <summary>
+        /// The assembly's references, as given by MSBuild.
+        /// </summary>
+        public IReadOnlyList<AssemblyReference> AssemblyReferences =>
+            _configThunk.Value?.References ?? _emptyReferenceList;
 
         /// <summary>
         /// A Serilog <see cref="ILogger"/> that redirects events to MSBuild.
@@ -112,7 +134,7 @@ namespace Sigourney
                 return false;
             }
 
-            var config = WeaverConfig.TryCreate(Configuration);
+            var config = _configThunk.Value;
             if (config == null)
                 Log.LogWarning("Something went wrong with the weaver's Configuration task parameter. Please set it to @(SigourneyConfiguration). Sigourney's functionality might be limited.");
 

@@ -3,6 +3,8 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Build.Framework;
 
 namespace Sigourney
@@ -36,30 +38,47 @@ namespace Sigourney
         /// "IntermediateDirectory" property.</remarks>
         public string? IntermediateDirectory { get; set; }
 
+        /// <summary>
+        /// Additional assemblies that Mono.Cecil will take into consideration.
+        /// </summary>
+        /// <remarks>It is derived from the MSBuild "ReferencePath" item</remarks>
+        public List<AssemblyReference> References { get; } = new List<AssemblyReference>();
+
+        private static char[] _pathSeparator = new char[] { ';' };
+
         internal static WeaverConfig? TryCreate(ITaskItem[]? items)
         {
             if (items == null || items.Length != 1) return null;
 
             var item = items[0];
-            var signAssembly = bool.TryParse(item.GetMetadata(nameof(SignAssembly)), out var result) && result;
+            var config = new WeaverConfig();
 
-            static string? GetMetadata(ITaskItem item, string key)
+            string? GetMetadata(string key)
             {
                 var value = item.GetMetadata(key);
                 return string.IsNullOrEmpty(value) ? null : value;
             }
 
-            var keyOriginatorFile = GetMetadata(item, "KeyOriginatorFile");
-            var assemblyOriginatorKeyFile = GetMetadata(item, "AssemblyOriginatorKeyFile");
-            var keyFilePath = keyOriginatorFile ?? assemblyOriginatorKeyFile;
+            if (bool.TryParse(item.GetMetadata(nameof(SignAssembly)), out var result))
+                config.SignAssembly = result;
 
-            var intermediateDirectory = GetMetadata(item, nameof(IntermediateDirectory));
+            var keyOriginatorFile = GetMetadata("KeyOriginatorFile");
+            var assemblyOriginatorKeyFile = GetMetadata("AssemblyOriginatorKeyFile");
+            config.KeyFilePath = keyOriginatorFile ?? assemblyOriginatorKeyFile;
 
-            return new WeaverConfig() {
-                KeyFilePath = keyFilePath,
-                SignAssembly = signAssembly,
-                IntermediateDirectory = intermediateDirectory
-            };
+            config.IntermediateDirectory = GetMetadata(nameof(IntermediateDirectory));
+
+            var referencesMetadata = GetMetadata(nameof(References));
+            if (referencesMetadata != null)
+            {
+                var references =
+                    from x in referencesMetadata.Split(_pathSeparator, System.StringSplitOptions.RemoveEmptyEntries)
+                    where !string.IsNullOrWhiteSpace(x)
+                    select new AssemblyReference(x);
+                config.References.AddRange(references);
+            }
+
+            return config;
         }
     }
 }

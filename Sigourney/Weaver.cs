@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using Mono.Cecil;
@@ -55,17 +56,26 @@ namespace Sigourney
             {
                 // Is there any case where an assembly cannot have a name?
                 weaverNameActual = weaverAssembly.GetName().Name!;
-                log.Debug("No weaver name was supplied; it is inferred from the weaving delegate's assembly to be {WeaverName}", weaverNameActual);
+                log.Debug(
+                    "No weaver name was supplied; it is inferred from " +
+                    "the weaving delegate's assembly to be {WeaverName}", weaverNameActual);
             }
             else
                 weaverNameActual = weaverName!;
+
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
 
             // If the output path is specified (i.e. it's not the same as the input path),
             // we first copy the input assembly there, and then weave that new copy.
             if (outputPath != null)
                 File.Copy(inputPath, outputPath, true);
-            var readerParams = new ReaderParameters() {ReadWrite = true};
+            using var assemblyResolver =
+                new AssemblyReferenceResolver(config?.References ?? Enumerable.Empty<AssemblyReference>());
+            var readerParams = new ReaderParameters()
+            {
+                ReadWrite = true,
+                AssemblyResolver = assemblyResolver
+            };
             using (var asm = AssemblyDefinition.ReadAssembly(outputPath ?? inputPath, readerParams))
             {
                 var assemblyName = asm.Name.Name;
@@ -75,7 +85,8 @@ namespace Sigourney
                 {
                     if (!fWeave(asm))
                     {
-                        log.Debug("Skipping weaving {AssemblyName} because the weaving function returned false.", assemblyName);
+                        log.Debug("Skipping weaving {AssemblyName} because the weaving function returned false.",
+                            assemblyName);
                         return;
                     }
 
@@ -90,7 +101,9 @@ namespace Sigourney
                     asm.Write(writerParams);
                 }
                 else
-                    log.Debug("Skipping weaving {AssemblyName} because it already has a type named ProcessedBy{WeaverName}.", assemblyName);
+                    log.Debug(
+                        "Skipping weaving {AssemblyName} because it already" +
+                        "has a type named ProcessedBy{WeaverName}.", assemblyName);
             }
         }
     }
