@@ -28,9 +28,9 @@ namespace testweaver_1
         }
 
         // The MSBuildWeaver class has an abstract method that accepts a Mono.Cecil
-        // assembly definition and returns a boolean value. If false is returned,
-        // weaving is skipped and the assembly file on the disk is not changed.
-        // In that case, any changes to the assembly definition are discarded.
+        // assembly definition, modifies it, and returns a boolean value. If false
+        // is returned, weaving is skipped and the assembly file on the disk is not
+        // changed. In that case, any changes to the assembly definition are discarded.
         protected override bool DoWeave(AssemblyDefinition asm)
         {
             asm.MainModule.Types.Add(new TypeDefinition("", "TestWeaver1Rulez",
