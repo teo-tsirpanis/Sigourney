@@ -20,7 +20,7 @@ function Invoke-MSBuild-Test {
     param ([string]$MSBuildCommand, [string]$CommandPrefix)
     DotnetClean
     for ($i = 1; ($i -le 3) -and ($LASTEXITCODE -eq 0); $i++) {
-        & $MSBuildCommand ($CommandPrefix, $TestProject, "/v:m", "/nodereuse:false", "/bl:$TestLogs$MSBuildCommand-$i.binlog")
+        & $MSBuildCommand ($CommandPrefix, $TestProject, "/v:m", "/p:TestExecutionNumber=$i", "/nodereuse:false", "/bl:$TestLogs$MSBuildCommand-$i.binlog")
     }
 }
 
