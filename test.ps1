@@ -16,17 +16,16 @@ Remove-Directory-Checked $TestLogs
 # dotnet clean might fail the first time.
 Remove-Item tests\**\obj\* -Recurse -Force
 
-DotnetClean
-for ($i = 1; ($i -le 3) -and ($LASTEXITCODE -eq 0); $i++) {
-    dotnet msbuild $TestProject /v:m /nodereuse:false ("/bl:{0}dotnet-{1}.binlog" -f $TestLogs, $i)
-}
-
-if ($IsWindows -and ($LASTEXITCODE -eq 0)) {
+function Invoke-MSBuild-Test {
+    param ([string]$MSBuildCommand, [string]$CommandPrefix)
     DotnetClean
     for ($i = 1; ($i -le 3) -and ($LASTEXITCODE -eq 0); $i++) {
-        msbuild $TestProject /v:m /nodereuse:false ("/bl:{0}msbuild-{1}.binlog" -f $TestLogs, $i)
+        & $MSBuildCommand ($CommandPrefix, $TestProject, "/v:m", "/nodereuse:false", "/bl:$TestLogs$MSBuildCommand-$i.binlog")
     }
 }
+
+Invoke-MSBuild-Test "dotnet" "msbuild"
+if ($IsWindows -and ($LASTEXITCODE -eq 0)) {Invoke-MSBuild-Test "msbuild" ""}
 
 Compress-Archive $TestLogs -DestinationPath "test-logs.zip" -Force
 exit $LASTEXITCODE
