@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Mono.Cecil;
+using Serilog;
 
 namespace Sigourney
 {
@@ -110,6 +111,7 @@ namespace Sigourney
     internal sealed class AssemblyReferenceResolver : BaseAssemblyResolver
     {
         private readonly Dictionary<string, string> _assemblyNameLookup;
+        private readonly ILogger _log;
 
         // The DefaultAssemblyResolver's cache is not appropriate because we
         // can't check whether it has the assembly we ask for without triggering
@@ -118,19 +120,25 @@ namespace Sigourney
         private readonly ConcurrentDictionary<string, AssemblyDefinition> _assemblyCache =
             new ConcurrentDictionary<string, AssemblyDefinition>(StringComparer.Ordinal);
 
-        internal AssemblyReferenceResolver(IEnumerable<AssemblyReference> assemblies)
+        internal AssemblyReferenceResolver(IEnumerable<AssemblyReference> assemblies, ILogger log)
         {
             _assemblyNameLookup = assemblies.ToDictionary(x => x.AssemblyName.FullName,
                 x => x.FileName, StringComparer.Ordinal);
+            _log = log;
         }
 
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
-            return _assemblyCache.GetOrAdd(name.FullName, key =>
-                _assemblyNameLookup.TryGetValue(key, out var path)
-                    ? AssemblyDefinition.ReadAssembly(path)
-                    : base.Resolve(name)
-            );
+            _log.Verbose("Cecil requested to resolve assembly {AssemblyName}...", name);
+            return _assemblyCache.GetOrAdd(name.FullName, key => {
+                if (_assemblyNameLookup.TryGetValue(key, out var path)) {
+                    _log.Verbose("Assembly recognized as project reference, loading it for the first time...");
+                    return AssemblyDefinition.ReadAssembly(path);
+                }
+
+                _log.Verbose("Unrecognized assembly, falling back to Cecil's resolver...");
+                return base.Resolve(name);
+            });
         }
 
         protected override void Dispose(bool disposing)

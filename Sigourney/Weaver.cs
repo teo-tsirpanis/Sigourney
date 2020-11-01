@@ -70,7 +70,7 @@ namespace Sigourney
             if (outputPath != null)
                 File.Copy(inputPath, outputPath, true);
             using var assemblyResolver =
-                new AssemblyReferenceResolver(config?.References ?? Enumerable.Empty<AssemblyReference>());
+                new AssemblyReferenceResolver(config?.References ?? Enumerable.Empty<AssemblyReference>(), log);
             var readerParams = new ReaderParameters()
             {
                 ReadWrite = true,

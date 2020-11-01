@@ -128,6 +128,11 @@ namespace Sigourney
         /// </returns>
         public override bool Execute()
         {
+            // .NET Framework-based MSBuild uses the Sigourney.dll at the Sigourney package
+            // directory, while dotnet msbuild uses the Sigourney.dll next to the weaver.
+            Log.LogMessage(MessageImportance.Low, "Using Sigourney's assembly at {0}",
+                typeof(MSBuildWeaver).Assembly.Location);
+
             if (!string.IsNullOrEmpty(OutputSentinel) && string.IsNullOrEmpty(WeaverName))
             {
                 Log.LogError("The WeaverName property must be set if the OutputSentinel property is set too.");
