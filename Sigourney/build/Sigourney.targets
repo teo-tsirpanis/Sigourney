@@ -9,6 +9,7 @@ https://opensource.org/licenses/MIT
   <Import Project="$(MSBuildThisFileDirectory)Sigourney.PublishMode.Targets" />
   <PropertyGroup>
     <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
+    <ProcessedBySigourney>$(IntermediateDirectory)ProcessedBySigourney</ProcessedBySigourney>
     <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
     <CleanDependsOn>$(CleanDependsOn);SigourneyCleanSentinels</CleanDependsOn>
   </PropertyGroup>
@@ -31,15 +32,25 @@ https://opensource.org/licenses/MIT
   </Target>
 
   <Target
+    Name="SigourneyCallWeavers"
+    DependsOnTargets="SigourneyLoadConfiguration;$(SigourneyRegisteredTargets)" />
+
+  <Target
     Name="SigourneyEntryPoint"
     Condition="$(_SigourneyEnable) != false AND '$(SigourneyRegisteredTargets)' != ''"
     AfterTargets="AfterCompile"
-    DependsOnTargets="SigourneyLoadConfiguration;$(SigourneyRegisteredTargets)">
+    Inputs="@(IntermediateAssembly)"
+    Outputs="$(ProcessedBySigourney)">
+    <!-- Because the dependant targets are executed before evaluating the target inputs/outputs,
+    we create a separate target that depends on the weavers and imperatively call it from this
+    target, after it is determined whether MSBuild should skip Sigourney or not. -->
+    <CallTarget Targets="SigourneyCallWeavers" />
+    <WriteLinesToFile File="$(ProcessedBySigourney)" Overwrite="true" />
   </Target>
 
   <Target Name="SigourneyCleanSentinels">
     <ItemGroup>
-      <_SigourneyAllSentinels Include="$(IntermediateDirectory)ProcessedBySigourney.*" />
+      <_SigourneyAllSentinels Include="$(IntermediateDirectory)ProcessedBySigourney*" />
     </ItemGroup>
     <Delete Files="@(_SigourneyAllSentinels)" />
   </Target>

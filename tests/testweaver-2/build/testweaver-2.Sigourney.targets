@@ -1,23 +1,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TestWeaver2Assembly)" TaskName="TestWeaver2" />
 
-  <Target Name="PrepareTestWeaver2" BeforeTargets="RunTestWeaver2">
-    <GetNextSentinel
-      IntermediateDirectory="$(IntermediateDirectory)"
-      WeaverName="TestWeaver2"
-      AssemblyPath="@(IntermediateAssembly)"
-      InputSentinel="$(SigourneyInputSentinel)"
-      OutputSentinel="$(SigourneyOutputSentinel)">
-      <Output TaskParameter="InputSentinel" PropertyName="SigourneyInputSentinel" />
-      <Output TaskParameter="OutputSentinel" PropertyName="SigourneyOutputSentinel" />
-    </GetNextSentinel>
-  </Target>
-
-  <Target Name="RunTestWeaver2" Inputs="$(SigourneyInputSentinel)" Outputs="$(SigourneyOutputSentinel)">
+  <Target Name="RunTestWeaver2">
     <TestWeaver2
       AssemblyPath="@(IntermediateAssembly)"
       WeaverName="TestWeaver2"
-      OutputSentinel="$(SigourneyOutputSentinel)"
       Configuration="@(SigourneyConfiguration)" />
   </Target>
 </Project>

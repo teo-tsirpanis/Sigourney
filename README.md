@@ -44,7 +44,7 @@ In its essence, Sigourney is a thin layer over Mono.Cecil (Fody is arguably thic
 
 In most cases, using a weaver powered by Sigourney is as easy as installing a NuGet package. Consult the documentation of that package for more details.
 
-Sigourney has a particular pattern for creating MSBuild-based weavers that can coexist with others in the same project. To learn how to create a weaver based on that pattern, this repository has a sample project in [`tests/testweaver-1`][testweaver1].
+Sigourney has a particular pattern for creating MSBuild-based weavers that can coexist with others in the same project and support incremental building. To learn how to create a weaver based on that pattern, this repository has a sample project in [`tests/testweaver-1`][testweaver1].
 
 To easily disable all weavers that were implemented according to the standard pattern, add the following line inside a `PropertyGroup` in your project file:
 
@@ -98,9 +98,9 @@ Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y
 ## Known issues
 
 *
-  Sigourney's MSBuild integration does not fully support incremental builds on projects that use more than one weaver.
+  <s>Sigourney's MSBuild integration does not fully support incremental builds on projects that use more than one weaver.
 
-  Since Sigourney already supports incremental weaving through the `ProcessedBy` classes, fixing this issue has a low priority. Anybody interested can feel free to propose a solution.
+  Since Sigourney already supports incremental weaving through the `ProcessedBy` classes, fixing this issue has a low priority. Anybody interested can feel free to propose a solution.</s> This problem was fixed in Sigourney 0.3.0.
 
 ## License
 

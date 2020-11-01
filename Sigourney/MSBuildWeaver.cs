@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.ComponentModel;
 using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.Build.Framework;
@@ -13,7 +13,7 @@ using ILogger = Serilog.ILogger;
 namespace Sigourney
 {
     /// <summary>
-    /// An MSBuild task that executes a <see cref="Weaver"/>.
+    /// An abstract MSBuild task that weaves assemblies with Sigourney.
     /// </summary>
     [PublicAPI]
     public abstract class MSBuildWeaver : Task
@@ -45,36 +45,30 @@ namespace Sigourney
         /// A unique name for your weaver.
         /// </summary>
         /// <remarks>
-        /// It has to be set if multiple weavers exist in the same assembly,
-        /// or the sentinel API is used. In the latter case, its value must
-        /// be the same with the one passed in <see cref="GetNextSentinel.WeaverName"/>.
+        /// If many weavers use the same weaver name, only one of them will
+        /// be executed. Defaults to the name of the assembly containing this task.
         /// </remarks>
         public string? WeaverName { get; set; }
 
         /// <summary>
         /// The path to save the weaved assembly.
         /// </summary>
-        /// <remarks>Defaults to <see cref="AssemblyPath"/>
-        /// if not specified.</remarks>
+        /// <remarks>Defaults to <see cref="AssemblyPath"/>.</remarks>
         public string? OutputPath { get; set; }
 
         /// <summary>
-        /// The path of the output sentinel file that corresponds to this task.
+        /// Unused and ignored as of Sigourney 0.3.0.
+        /// Preserved for backwards compatibility.
         /// </summary>
-        /// <remarks>
-        /// After weaving the assembly, Sigourney will create a file
-        /// in this path, containing <see cref="WeaverName"/>.
-        /// If this parameter is set, <see cref="WeaverName"/> must
-        /// be set as well or the build will fail.
-        /// </remarks>
-        /// <seealso cref="GetNextSentinel"/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string? OutputSentinel { get; set; }
 
         /// <summary>
-        /// Additional configuration that Sigourney's internal implementation needs.
+        /// Additional configuration that enhances Sigourney's functionality.
         /// </summary>
         /// <remarks>
-        /// In MSBuild, this task parameter should be passed as <c>@(SigourneyConfiguration)</c>.
+        /// The content of this task parameter is a blackbox and
+        /// should be passed as <c>@(SigourneyConfiguration)</c>.
         /// </remarks>
         public ITaskItem[]? Configuration { get; set; }
 
@@ -133,20 +127,11 @@ namespace Sigourney
             Log.LogMessage(MessageImportance.Low, "Using Sigourney's assembly at {0}",
                 typeof(MSBuildWeaver).Assembly.Location);
 
-            if (!string.IsNullOrEmpty(OutputSentinel) && string.IsNullOrEmpty(WeaverName))
-            {
-                Log.LogError("The WeaverName property must be set if the OutputSentinel property is set too.");
-                return false;
-            }
-
             var config = _configThunk.Value;
             if (config == null)
                 Log.LogWarning("Something went wrong with the weaver's Configuration task parameter. Please set it to @(SigourneyConfiguration). Sigourney's functionality might be limited.");
 
             Weaver.Weave(AssemblyPath, OutputPath, DoWeave, Log2, config, WeaverName);
-
-            if (!string.IsNullOrEmpty(OutputSentinel) && !Log.HasLoggedErrors)
-                File.WriteAllText(OutputSentinel, WeaverName!);
 
             // Log2 internally uses Log to send the logging events.
             // Any error Log2 might send counts towards Log.HasLoggedErrors.
