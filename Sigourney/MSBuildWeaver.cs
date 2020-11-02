@@ -73,7 +73,7 @@ namespace Sigourney
         public ITaskItem[]? Configuration { get; set; }
 
         /// <summary>
-        /// The assembly's references, as given by MSBuild.
+        /// The assembly's references.
         /// </summary>
         public IReadOnlyList<AssemblyReference> AssemblyReferences =>
             _configThunk.Value?.References ?? _emptyReferenceList;

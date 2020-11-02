@@ -2,12 +2,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Sigourney</PackageId>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <Description>A lightweight toolkit that helps easily writing .NET assembly weavers.</Description>
     <Authors>Theodore Tsirpanis</Authors>
     <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License. Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
-    <PackageReleaseNotes>Reword some log messages.
-Remove the sentinel files when the project gets cleaned.</PackageReleaseNotes>
+    <PackageReleaseNotes>Expose the assembly references to MSBuild weaver tasks.
+
+Deprecate the sentinel API in favor of a simpler incremental build system that always works.
+
+Update dependencies, shrinking Sigourney package's size.
+
+Fix some Unix-specific bugs.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/teo-tsirpanis/Sigourney</PackageProjectUrl>
     <PackageTags>ILWeaving;Sigourney;Cecil</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

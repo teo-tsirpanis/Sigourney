@@ -10,10 +10,10 @@ using Microsoft.Build.Framework;
 namespace Sigourney
 {
     /// <summary>
-    /// A class containing configuration data for a <see cref="Weaver"/>.
+    /// A class containing optional configuration that is passed to <see cref="Weaver.Weave"/>.
     /// </summary>
-    /// <remarks>The necessary ones are typically provided by MSBuild,
-    /// but custom applications can give their own.</remarks>
+    /// <remarks>It is automaticallly created by MSBuild but standalone
+    /// applications using Sigourney can use their own.</remarks>
     public class WeaverConfig
     {
         /// <summary>

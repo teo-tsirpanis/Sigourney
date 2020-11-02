@@ -53,11 +53,11 @@ namespace Sigourney
         public bool IsReferenceAssembly { get; }
 
         /// <summary>
-        /// A <see cref="AssemblyNameDefinition"/> object that corresponds to this assembly.
+        /// An <see cref="AssemblyNameDefinition"/> object that corresponds to this assembly.
         /// </summary>
         public AssemblyNameDefinition AssemblyName { get; }
 
-        #region Equality comparer boilerplate
+        #region Interface implementation boilerplate
 
         /// <inheritdoc/>
         public bool Equals(AssemblyReference? other)
