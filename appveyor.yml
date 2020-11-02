@@ -7,4 +7,4 @@ nuget:
 build_script:
   - pwsh: ./test.ps1; exit $LASTEXITCODE
 artifacts:
-  - path: "test-logs.zip"
+  - path: "./test-logs.zip"
