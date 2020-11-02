@@ -8,14 +8,14 @@ https://opensource.org/licenses/MIT
   TreatAsLocalProperty="_ToolsDirectory">
   <PropertyGroup Condition="$(SigourneyPublish) == true">
     <SigourneyPublishPackageTarget Condition="'$(SigourneyPublishPackageTarget)' == ''">tools</SigourneyPublishPackageTarget>
-    <_ToolsDirectory>$(IntermediateOutputPath)/tools</_ToolsDirectory>
+    <_ToolsDirectory>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)/tools</_ToolsDirectory>
   </PropertyGroup>
 
   <Target Name="PreparePack" Condition="$(SigourneyPublish) == true" AfterTargets="Build">
     <ItemGroup>
       <_FrameworksToBuild Include="$(TargetFrameworks)" />
       <_FrameworksToBuild Include="$(TargetFramework)" Condition="'@(_FrameworksToBuild)' == ''" />
-      <_ProjectsToPublish Include="$(MSBuildProjectFullPath)" AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(_ToolsDirectory)\%(_FrameworksToBuild.Identity)\" />
+      <_ProjectsToPublish Include="$(MSBuildProjectFullPath)" AdditionalProperties="TargetFramework=%(_FrameworksToBuild.Identity);PublishDir=$(_ToolsDirectory)/%(_FrameworksToBuild.Identity)/" />
     </ItemGroup>
     <RemoveDir Directories="$(_ToolsDirectory)" />
     <MSBuild Projects="@(_ProjectsToPublish)" Properties="NoBuild=true;Configuration=$(Configuration)" Targets="Publish" BuildInParallel="$(BuildInParallel)" />

@@ -1,3 +1,4 @@
+#! /usr/bin/env pwsh
 # This little script runs Sigourney's test project thrice to ensure it works repeatedly.
 # It also keeps binary logs of each test run (which are kept as artifacts by AppVeyor).
 

@@ -6,7 +6,7 @@ https://opensource.org/licenses/MIT
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
   TreatAsLocalProperty="_SigourneyEnable">
-  <Import Project="$(MSBuildThisFileDirectory)Sigourney.PublishMode.Targets" />
+  <Import Project="$(MSBuildThisFileDirectory)Sigourney.PublishMode.targets" />
   <PropertyGroup>
     <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
     <ProcessedBySigourney>$(IntermediateDirectory)ProcessedBySigourney</ProcessedBySigourney>
