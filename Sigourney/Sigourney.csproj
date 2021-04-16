@@ -2,13 +2,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Sigourney</PackageId>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <Description>A lightweight toolkit that helps easily writing .NET assembly weavers.</Description>
     <Authors>Theodore Tsirpanis</Authors>
     <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License. Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
-    <PackageReleaseNotes>Fix the publish mode for multi-targeting projects.
+    <PackageReleaseNotes>Update the debug symbols of weaved assemblies when they are found. This change allows them to be stepped in when debugged from an IDE.
 
-Updating and re-releasing weavers to this version is not needed.</PackageReleaseNotes>
+Weavers will have to be updated and re-released to take advantage of this version's features.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/teo-tsirpanis/Sigourney</PackageProjectUrl>
     <PackageTags>ILWeaving;Sigourney;Cecil</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
