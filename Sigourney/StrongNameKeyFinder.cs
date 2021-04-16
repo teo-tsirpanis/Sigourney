@@ -40,13 +40,13 @@ namespace Sigourney
             }
             catch (ArgumentException e)
             {
-                log.Debug(e, "Exception while trying to load strong-name key pair.");
+                log.Debug(e, "Exception while trying to load strong-name key pair");
                 keyPair = null;
                 publicKey = fileBytes;
             }
             catch (NotSupportedException)
             {
-                log.Warning("Sigourney does not support strong naming on some platforms like .NET Core-based MSBuild.");
+                log.Warning("Sigourney does not support strong naming on some platforms like .NET Core-based MSBuild");
                 throw;
             }
         }
@@ -57,7 +57,7 @@ namespace Sigourney
             if (!string.IsNullOrEmpty(config.KeyFilePath))
             {
                 keyFilePath = Path.GetFullPath(keyFilePath!);
-                log.Debug("Using strong name key from KeyFilePath '{KeyFilePath}'.", keyFilePath);
+                log.Debug("Using strong name key from KeyFilePath '{KeyFilePath}'", keyFilePath);
                 return keyFilePath;
             }
 

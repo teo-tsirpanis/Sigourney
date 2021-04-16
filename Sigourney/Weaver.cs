@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020 Theodore Tsirpanis
+// Copyright (c) 2020 Theodore Tsirpanis
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -85,12 +85,12 @@ namespace Sigourney
                 {
                     if (!fWeave(asm))
                     {
-                        log.Debug("Skipping weaving {AssemblyName} because the weaving function returned false.",
+                        log.Debug("Skipping weaving {AssemblyName} because the weaving function returned false",
                             assemblyName);
                         return;
                     }
 
-                    log.Debug("Weaving {AssemblyName} succeeded.", assemblyName);
+                    log.Debug("Weaving {AssemblyName} succeeded", assemblyName);
 
                     AssemblyMarker.MarkAsProcessed(asm, weaverNameActual, assemblyVersion, log);
                     var writerParams = new WriterParameters
@@ -103,7 +103,7 @@ namespace Sigourney
                 else
                     log.Debug(
                         "Skipping weaving {AssemblyName} because it already" +
-                        "has a type named ProcessedBy{WeaverName}.", assemblyName);
+                        "has a type named ProcessedBy{WeaverName}", assemblyName, weaverName);
             }
         }
     }

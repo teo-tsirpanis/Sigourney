@@ -129,14 +129,14 @@ namespace Sigourney
 
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
-            _log.Verbose("Cecil requested to resolve assembly {AssemblyName}...", name);
+            _log.Verbose("Cecil requested to resolve assembly {AssemblyName}", name);
             return _assemblyCache.GetOrAdd(name.FullName, key => {
                 if (_assemblyNameLookup.TryGetValue(key, out var path)) {
-                    _log.Verbose("Assembly recognized as project reference, loading it for the first time...");
+                    _log.Verbose("Assembly recognized as project reference, loading it for the first time");
                     return AssemblyDefinition.ReadAssembly(path);
                 }
 
-                _log.Verbose("Unrecognized assembly, falling back to Cecil's resolver...");
+                _log.Verbose("Unrecognized assembly, falling back to Cecil's resolver");
                 return base.Resolve(name);
             });
         }
