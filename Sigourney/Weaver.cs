@@ -14,7 +14,7 @@ using Serilog;
 namespace Sigourney
 {
     /// <summary>
-    /// An abstract class for a procedure that modifies (weaves) a .NET assembly.
+    /// Provides methods to modify (weave) a .NET assembly.
     /// </summary>
     /// <remarks>The type's fully qualified name does not imply
     /// an endorsement or support of any kind from anyone.</remarks>

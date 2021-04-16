@@ -94,7 +94,7 @@ namespace Sigourney
             if (ReferenceEquals(this, obj)) return 0;
             return obj is AssemblyReference other
                 ? CompareTo(other)
-                : throw new ArgumentException($"Object must be of type {nameof(AssemblyReference)}");
+                : throw new ArgumentException($"Object must be of type {nameof(AssemblyReference)}", nameof(obj));
         }
 
         /// <inheritdoc/>
