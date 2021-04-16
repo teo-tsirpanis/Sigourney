@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Theodore Tsirpanis
+﻿// Copyright (c) 2020 Theodore Tsirpanis
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -26,6 +26,21 @@ namespace Sigourney
             return asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
                 // Is there any case where an assembly cannot have a version?
                 ?.InformationalVersion ?? asm.GetName().Version!.ToString();
+        }
+
+        private static bool TryReadSymbols(AssemblyDefinition asm, ILogger log)
+        {
+            try
+            {
+                asm.MainModule.ReadSymbols();
+                log.Debug("Debug symbols found and loaded");
+                return true;
+            }
+            catch (Exception e)
+            {
+                log.Debug(e, "Reading debug symbols failed");
+                return false;
+            }
         }
 
         /// <summary>
@@ -79,6 +94,7 @@ namespace Sigourney
             using (var asm = AssemblyDefinition.ReadAssembly(outputPath ?? inputPath, readerParams))
             {
                 var assemblyName = asm.Name.Name;
+                var hasSymbols = TryReadSymbols(asm, log);
                 StrongNameKeyFinder.FindStrongNameKey(config, asm, log, out var keyPair, out var publicKey);
 
                 if (AssemblyMarker.ShouldProcess(asm, weaverNameActual))
@@ -95,7 +111,8 @@ namespace Sigourney
                     AssemblyMarker.MarkAsProcessed(asm, weaverNameActual, assemblyVersion, log);
                     var writerParams = new WriterParameters
                     {
-                        StrongNameKeyPair = keyPair
+                        StrongNameKeyPair = keyPair,
+                        WriteSymbols = hasSymbols
                     };
                     asm.Name.PublicKey = publicKey;
                     asm.Write(writerParams);
