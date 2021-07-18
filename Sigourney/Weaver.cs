@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Theodore Tsirpanis
+﻿// Copyright (c) 2020 Theodore Tsirpanis
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -72,17 +72,15 @@ namespace Sigourney
             if (log == null) throw new ArgumentNullException(nameof(log));
             
             var weaverAssembly = fWeave.Method.Module.Assembly;
-            string weaverNameActual;
-            if (string.IsNullOrEmpty(weaverName))
+            // string.IsNullOrEmpty does not propagate nullability information on .NET Standard 2.0
+            if (weaverName == null || weaverName.Length == 0)
             {
                 // Is there any case where an assembly cannot have a name?
-                weaverNameActual = weaverAssembly.GetName().Name!;
+                weaverName = weaverAssembly.GetName().Name!;
                 log.Debug(
                     "No weaver name was supplied; it is inferred from " +
-                    "the weaving delegate's assembly to be {WeaverName}", weaverNameActual);
+                    "the weaving delegate's assembly to be {WeaverName}", weaverName);
             }
-            else
-                weaverNameActual = weaverName!;
 
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
 
@@ -103,7 +101,7 @@ namespace Sigourney
                 var hasSymbols = TryReadSymbols(asm, log);
                 StrongNameKeyFinder.FindStrongNameKey(config, asm, log, out var keyPair, out var publicKey);
 
-                if (AssemblyMarker.ShouldProcess(asm, weaverNameActual))
+                if (AssemblyMarker.ShouldProcess(asm, weaverName))
                 {
                     if (!fWeave(asm))
                     {
@@ -114,7 +112,7 @@ namespace Sigourney
 
                     log.Debug("Weaving {AssemblyName} succeeded", assemblyName);
 
-                    AssemblyMarker.MarkAsProcessed(asm, weaverNameActual, assemblyVersion, log);
+                    AssemblyMarker.MarkAsProcessed(asm, weaverName, assemblyVersion, log);
                     var writerParams = new WriterParameters
                     {
                         StrongNameKeyPair = keyPair,
