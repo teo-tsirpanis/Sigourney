@@ -3,6 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -46,7 +47,16 @@ namespace Sigourney
 
         private static char[] _pathSeparator = new char[] { ';' };
 
-        internal static WeaverConfig? TryCreate(ITaskItem[]? items)
+        /// <summary>
+        /// Creates a <see cref="WeaverConfig"/> from the MSBuild
+        /// items taken from <c>@(SigourneyConfiguration)</c>.
+        /// </summary>
+        /// <param name="items">The array of items to process.
+        /// They have to be supplied by an MSBuild task parameter
+        /// with a value of <c>@(SigourneyConfiguration)</c>.</param>
+        /// <returns>A <see cref="WeaverConfig"/> or <see langword="null"/>
+        /// if <paramref name="items"/> is invalid.</returns>
+        public static WeaverConfig? TryCreateFromSigourneyConfiguration(ITaskItem[]? items)
         {
             if (items == null || items.Length != 1) return null;
 
@@ -72,7 +82,7 @@ namespace Sigourney
             if (referencesMetadata != null)
             {
                 var references =
-                    from x in referencesMetadata.Split(_pathSeparator, System.StringSplitOptions.RemoveEmptyEntries)
+                    from x in referencesMetadata.Split(_pathSeparator, StringSplitOptions.RemoveEmptyEntries)
                     where !string.IsNullOrWhiteSpace(x)
                     select new AssemblyReference(x);
                 config.References.AddRange(references);

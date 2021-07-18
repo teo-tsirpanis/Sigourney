@@ -31,7 +31,7 @@ namespace Sigourney
         {
             // We assume that the Configuration items are
             // not modified by user code; they are a black box.
-            _configThunk = new Lazy<WeaverConfig?>(() => WeaverConfig.TryCreate(Configuration));
+            _configThunk = new Lazy<WeaverConfig?>(() => WeaverConfig.TryCreateFromSigourneyConfiguration(Configuration));
         }
 
         /// <summary>
