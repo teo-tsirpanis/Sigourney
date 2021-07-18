@@ -7,12 +7,12 @@ Sigourney is a lightweight toolkit that helps developers write weavers, tools th
 
 ## Projects using Sigourney
 
-At the moment, Sigourney is known to be used by two projects, both of them developed by Sigourney's author.
+At the moment, Sigourney is known to be used by two projects, both developed by Sigourney's author.
 
 * [Covarsky][covarsky], a tool that brings co(ntra)variance in languages that don't support it like F#.
 * [Farkle][farkle], an LALR parsing library that uses Sigourney for [its grammar precompiler][farkle-precompiler].
 
-If your project uses Sigourney, feel free to open a pull request to add it to the list.
+If your project uses Sigourney, feel free to open a pull request to add it to the list. It would really help with understanding if and how third parties are using it, and managing breaking changes.
 
 ## Why use Sigourney
 
@@ -91,7 +91,7 @@ Because Mono.Cecil treats assemblies in a framework-agnostic way, Sigourney shou
 
 No MSBuild version is explicitly supported or unsupported, but Sigourney is only tested against the latest one. Earlier ones might be supported, or maybe not.
 
-Sigourney was tested with SDK-style projects only. Legacy .NET Framework projects (the big, unreadable ones) are not known whether they work or not.
+Sigourney is tested with SDK-style projects only. Legacy .NET Framework projects (the big, unreadable ones) are not known whether they work or not.
 
 Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y` range. Patch releases will not break code, although they might upgrade libraries. Minor releases are more likely to break stuff but such impact will be attempted to be kept at a minimum.
 
@@ -101,6 +101,8 @@ Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y
   <s>Sigourney's MSBuild integration does not fully support incremental builds on projects that use more than one weaver.
 
   Since Sigourney already supports incremental weaving through the `ProcessedBy` classes, fixing this issue has a low priority. Anybody interested can feel free to propose a solution.</s> This problem was fixed in Sigourney 0.3.0.
+
+* Strong-naming assemblies is not supported when you build your project with a .NET Core-based edition of MSBuild. 
 
 ## License
 

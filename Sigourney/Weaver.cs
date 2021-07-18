@@ -50,7 +50,8 @@ namespace Sigourney
         /// will be placed to the assembly, to instruct Sigourney not to weave it again.</remarks>
         /// <param name="inputPath">The path of the assembly to weave.</param>
         /// <param name="outputPath">The path where the weaved assembly will be stored.
-        /// Defaults to <paramref name="inputPath"/> if null.</param>
+        /// Defaults to <paramref name="inputPath"/> if null. It must not
+        /// be equal to <paramref name="inputPath"/>.</param>
         /// <param name="fWeave">A delegate that performs the actual weaving. If it returns
         /// <see langword="false"/>, weaving will stop and the assembly will not be modified.</param>
         /// <param name="log">A Serilog <see cref="ILogger"/> that will
