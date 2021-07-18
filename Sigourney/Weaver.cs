@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020 Theodore Tsirpanis
+// Copyright (c) 2020 Theodore Tsirpanis
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -61,10 +61,16 @@ namespace Sigourney
         /// <param name="weaverName">The name of the program that weaved the assembly.
         /// If not specified, it will be the name of the assembly
         /// in which <paramref name="fWeave"/> was declared.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="inputPath"/>,
+        /// <paramref name="fWeave"/> or <paramref name="log"/> is <see langword="null"/>.</exception>
         public static void Weave(string inputPath, string? outputPath,
             Func<AssemblyDefinition, bool> fWeave, ILogger log, WeaverConfig? config = null,
             string? weaverName = null)
         {
+            if (inputPath == null) throw new ArgumentNullException(nameof(inputPath));
+            if (fWeave == null) throw new ArgumentNullException(nameof(fWeave));
+            if (log == null) throw new ArgumentNullException(nameof(log));
+            
             var weaverAssembly = fWeave.Method.Module.Assembly;
             string weaverNameActual;
             if (string.IsNullOrEmpty(weaverName))

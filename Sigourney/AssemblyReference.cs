@@ -32,8 +32,12 @@ namespace Sigourney
         /// Creates an <see cref="AssemblyReference"/>.
         /// </summary>
         /// <param name="fileName">The path to the assembly.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/>
+        /// is <see langword="null"/>.</exception>
         public AssemblyReference(string fileName)
         {
+            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+
             FileName = fileName;
 
             using var asm = AssemblyDefinition.ReadAssembly(fileName);
@@ -120,13 +124,24 @@ namespace Sigourney
         private readonly ConcurrentDictionary<string, AssemblyDefinition> _assemblyCache =
             new ConcurrentDictionary<string, AssemblyDefinition>(StringComparer.Ordinal);
 
+        /// <summary>
+        /// Creates an <see cref="AssemblyReferenceResolver"/>.
+        /// </summary>
+        /// <param name="assemblies">The <see cref="AssemblyReference"/>s
+        /// this resolver will know.</param>
+        /// <param name="log">A Serilog <see cref="ILogger"/> that logs assembly resolutions.</param>
+        /// <exception cref="ArgumentNullException">Any parameter is <see langword="null"/>.</exception>
         internal AssemblyReferenceResolver(IEnumerable<AssemblyReference> assemblies, ILogger log)
         {
+            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
+            if (log == null) throw new ArgumentNullException(nameof(log));
+
             _assemblyNameLookup = assemblies.ToDictionary(x => x.AssemblyName.FullName,
                 x => x.FileName, StringComparer.Ordinal);
             _log = log;
         }
 
+        /// <inheritdoc/>
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
             _log.Verbose("Cecil requested to resolve assembly {AssemblyName}", name);
@@ -141,6 +156,7 @@ namespace Sigourney
             });
         }
 
+        /// <inheritdoc/>
         protected override void Dispose(bool disposing)
         {
             foreach (var asm in _assemblyCache.Values)
