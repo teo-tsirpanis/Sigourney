@@ -13,7 +13,6 @@ https://opensource.org/licenses/MIT
     <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
   </PropertyGroup>
 
-  <UsingTask Condition="$(_SigourneyEnable) != false" TaskName="GetNextSentinel" AssemblyFile="$(SigourneyAssembly)" />
   <Import
     Condition="$(_SigourneyEnable) != false AND '$(SigourneyRegisteredTargetFiles)' != ''"
     Project="$(SigourneyRegisteredTargetFiles)" />

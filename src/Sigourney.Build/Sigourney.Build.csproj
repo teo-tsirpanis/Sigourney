@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../nuget.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>MSBuild targets for Sigourney. Weaver packages must publicly reference this package, otherwise Sigourney will not run.</Description>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="build/**" Pack="true" PackagePath="build" />
+    <None Include="buildMultiTargeting/**" Pack="true" PackagePath="buildMultiTargeting" />
+    <None Include="buildTransitive/**" Pack="true" PackagePath="buildTransitive" />
+  </ItemGroup>
+</Project>

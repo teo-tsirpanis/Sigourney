@@ -5,5 +5,5 @@ This software is released under the MIT License.
 https://opensource.org/licenses/MIT
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildThisFileDirectory)../build/Sigourney.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)../build/Sigourney.Build.targets" />
 </Project>

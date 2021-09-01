@@ -12,6 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="build/**" Pack="true" PackagePath="build" />
-    <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="compile" />
+    <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="Sigourney.Build" Version="0.0.0-local" />
   </ItemGroup>
 </Project>
