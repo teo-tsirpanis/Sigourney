@@ -1,19 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../nuget.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Sigourney</PackageId>
-    <Version>0.3.3</Version>
     <Description>A lightweight toolkit that helps easily writing .NET assembly weavers.</Description>
-    <Authors>Theodore Tsirpanis</Authors>
-    <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License. Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
+    <Copyright>$(Copyright) Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
     <PackageReleaseNotes>This release fixes some minor bugs, updates dependencies and adds a new API intented for some very limited scenarios.
 
 It is not urged, but weavers will have to be updated and re-released to fully take advantage of this version's features.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/teo-tsirpanis/Sigourney</PackageProjectUrl>
-    <PackageTags>ILWeaving;Sigourney;Cecil</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>$(PackageTags);Cecil</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -26,7 +22,6 @@ It is not urged, but weavers will have to be updated and re-released to fully ta
     <None Include="buildMultiTargeting/**" Pack="true" PackagePath="buildMultiTargeting" />
     <None Include="buildTransitive/**" Pack="true" PackagePath="buildTransitive" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.MSBuild" Version="1.4.0" />

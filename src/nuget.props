@@ -1,0 +1,14 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Version>0.3.3</Version>
+    <Authors>Theodore Tsirpanis</Authors>
+    <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/teo-tsirpanis/Sigourney</PackageProjectUrl>
+    <PackageTags>ILWeaving;Sigourney</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>
