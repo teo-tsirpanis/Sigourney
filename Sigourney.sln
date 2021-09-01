@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigourney", "Sigourney\Sigourney.csproj", "{CD697915-CF89-4C42-9F13-3B21115F6417}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigourney", "src\Sigourney\Sigourney.csproj", "{CD697915-CF89-4C42-9F13-3B21115F6417}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4C438E80-26DF-4599-B2FC-E30069A4B1B6}"
 ProjectSection(SolutionItems) = preProject
@@ -17,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigourney.Tests", "tests\Sigourney.Tests\Sigourney.Tests.csproj", "{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testweaver-2", "tests\testweaver-2\testweaver-2.csproj", "{1286B41D-C48C-4972-95C1-41AE1678A1EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{132E6BE0-8EF5-4A75-ABEB-1145D12366B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,5 +58,6 @@ Global
 		{EFEB4E37-873B-48F7-9B86-7970D150DBB4} = {4C438E80-26DF-4599-B2FC-E30069A4B1B6}
 		{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7} = {4C438E80-26DF-4599-B2FC-E30069A4B1B6}
 		{1286B41D-C48C-4972-95C1-41AE1678A1EB} = {4C438E80-26DF-4599-B2FC-E30069A4B1B6}
+		{CD697915-CF89-4C42-9F13-3B21115F6417} = {132E6BE0-8EF5-4A75-ABEB-1145D12366B7}
 	EndGlobalSection
 EndGlobal
