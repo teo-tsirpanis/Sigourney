@@ -32,11 +32,12 @@ Sigourney can also be used as a standalone library without hooking it to MSBuild
 
 ### Comparing Sigourney with Mono.Cecil
 
-In its essence, Sigourney is a thin layer over Mono.Cecil (Fody is arguably thicker). Using Sigourney is better than directly using Mono.Cecil for the following reasons:
+In its essence, Sigourney is a thin layer over Mono.Cecil (Fody is arguably thicker). Using Sigourney is better than directly using Mono.Cecil because of facilities Sigourney provides that you would otherwise implement yourself, like the following:
 
-* Assemblies weaved by Sigourney are marked with a type having a name like `ProcessedByMyAwesomeWeaver`. If your awesome weaver attempts to weave the same assembly more than once, Sigourney will do nothing. In Mono.Cecil you would have to implement such logic by yourself.
+* Assemblies weaved by Sigourney are marked with a type having a name like `ProcessedByMyAwesomeWeaver`. If your awesome weaver attempts to weave the same assembly more than once, Sigourney will do nothing.
 * Sigourney provides easy MSBuild integration of your weavers, allowing them to run when you build your project, without any extra steps. More on that right below.
-* Sigourney supports strong-named assemblies easily, abstracting away most of the logic behind finding the `.snk` files.
+* Sigourney supports strong-named assemblies easily ([with a caveat](#known-issues)), abstracting away most of the logic behind finding the `.snk` files.
+* Sigourney automatically updates the debug symbols of the assemblies, allowing them to still be debugged.
 
 ## How to use
 
@@ -83,9 +84,9 @@ To learn more, consult the documentation of the [`Weaver`][weaver-class] class.
 
 ## Supported versions policy
 
-__TL;DR:__ Sigourney's author does not care very much about backwards compatibility. Upgrade your SDK often. Expect breaking changes in minor releases but not in patch releases.
+__TL;DR:__ Since all known weavers are first-party, backwards compatibility is not a top priority of Sigourney. Upgrade your SDK often. Breaking changes are avoided but inevitable. Expect them in minor releases but not in patch releases.
 
-Sigourney is a .NET Standard 2.0 library, meaning that it will work in both .NET Framework and .NET Core-based editions of MSBuild. Unless an assembly with a weaver targets .NET Standard too, its author has to load the correct assembly using MSBuild's `MSBuildRuntimeType` property.
+Sigourney is a .NET Standard 2.0 library, meaning that it will work in both .NET Framework and .NET Core-based editions of MSBuild (the former are used with the `msbuild` command or on Visual Studio for Windows, and the latter when using modern `dotnet` SDK commands). Unless an assembly with a weaver targets .NET Standard too, its author has to load the correct assembly using MSBuild's `MSBuildRuntimeType` property.
 
 Because Mono.Cecil treats assemblies in a framework-agnostic way, Sigourney should work with any framework version supported by your SDK.
 
@@ -97,12 +98,12 @@ Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y
 
 ## Known issues
 
+* Strong-naming assemblies is not supported when you build your project using a .NET Core-based edition of MSBuild.
+
 *
-  <s>Sigourney's MSBuild integration does not fully support incremental builds on projects that use more than one weaver.
+    When you build a project with many weavers using a .NET Framework-based edition of MSBuild, each weaver's dependencies are not isolated. For example, if your project uses two weavers and each of them uses a different version of Sigourney, MSBuild will only use the version of Sigourney that the weaver that ran first used. This is an inherent limitation of the .NET Framework whose fix is not trivial and not planned for Sigourney.
 
-  Since Sigourney already supports incremental weaving through the `ProcessedBy` classes, fixing this issue has a low priority. Anybody interested can feel free to propose a solution.</s> This problem was fixed in Sigourney 0.3.0.
-
-* Strong-naming assemblies is not supported when you build your project with a .NET Core-based edition of MSBuild. 
+    To work around this, ensure that all weavers use the same version of Sigourney, or use a .NET Core-based edition of MSBuild. If you can't do that because you are are using Visual Studio on Windows, [please upvote this feedback item](https://developercommunity.visualstudio.com/t/Allow-building-SDK-style-projects-with-t/1331985).
 
 ## License
 
@@ -124,5 +125,5 @@ The code that handles strong-named assemblies was originally copied from Fody. I
 [fody-licensing]: https://github.com/Fody/Home/blob/master/pages/licensing-patron-faq.md
 [fody-weavers]: https://github.com/Fody/Home/blob/master/pages/addins.md
 [testweaver1]: https://github.com/teo-tsirpanis/Sigourney/tree/master/tests/testweaver-1
-[weaver-class]: https://github.com/teo-tsirpanis/Sigourney/tree/master/Sigourney/Weaver.cs
+[weaver-class]: https://github.com/teo-tsirpanis/Sigourney/tree/master/src/Sigourney/Weaver.cs
 [mit]: https://opensource.org/licenses/MIT

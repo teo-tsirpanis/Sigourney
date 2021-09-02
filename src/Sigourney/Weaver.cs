@@ -71,7 +71,7 @@ namespace Sigourney
             if (inputPath == null) throw new ArgumentNullException(nameof(inputPath));
             if (fWeave == null) throw new ArgumentNullException(nameof(fWeave));
             if (log == null) throw new ArgumentNullException(nameof(log));
-            
+
             var weaverAssembly = fWeave.Method.Module.Assembly;
             // string.IsNullOrEmpty does not propagate nullability information on .NET Standard 2.0
             if (weaverName == null || weaverName.Length == 0)
