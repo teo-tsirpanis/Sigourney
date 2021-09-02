@@ -5,7 +5,7 @@
     <PackageId>Sigourney</PackageId>
     <Description>A lightweight toolkit that helps easily writing .NET assembly weavers.</Description>
     <Copyright>$(Copyright) Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
-    <PackageReleaseNotes>Sigourney's build-time assets were moved to a new package, https://nuget.com/packages/Sigourney.Build, resulting in smaller download sizes and less dependencies. Weavers will need to be updated to publicly reference Sigourney.Build instead, as seen in the test weavers.
+    <PackageReleaseNotes>Sigourney's build-time assets were moved to a new package, https://nuget.org/packages/Sigourney.Build, resulting in smaller download sizes and less dependencies. Weavers will need to be updated to publicly reference Sigourney.Build instead, as seen in the test weavers.
 
 Legacy code that was supporting weavers targeting versions of Sigourney prior to 0.3.0 was removed.</PackageReleaseNotes>
     <PackageTags>$(PackageTags);Cecil</PackageTags>
