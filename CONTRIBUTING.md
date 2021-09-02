@@ -2,7 +2,7 @@
 
 ## How to test
 
-* Install .NET Core SDK, version 3.1
+* Install .NET 5 SDK
 * Install PowerShell
 * `cd tests`
 * `dotnet msbuild`
