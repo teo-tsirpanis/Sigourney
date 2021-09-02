@@ -11,6 +11,7 @@ https://opensource.org/licenses/MIT
     <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
     <ProcessedBySigourney>$(IntermediateDirectory)ProcessedBySigourney</ProcessedBySigourney>
     <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
+    <TargetsTriggeredByCompilation>$(TargetsTriggeredByCompilation);SigourneyEntryPoint</TargetsTriggeredByCompilation>
   </PropertyGroup>
 
   <Import
@@ -36,7 +37,6 @@ https://opensource.org/licenses/MIT
   <Target
     Name="SigourneyEntryPoint"
     Condition="$(_SigourneyEnable) != false AND '$(SigourneyRegisteredTargets)' != ''"
-    AfterTargets="AfterCompile"
     Inputs="@(IntermediateAssembly)"
     Outputs="$(ProcessedBySigourney)">
     <!-- Because the dependant targets are executed before evaluating the target inputs/outputs,
