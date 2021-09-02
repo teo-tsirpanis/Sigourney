@@ -33,12 +33,12 @@ namespace Sigourney
             try
             {
                 asm.MainModule.ReadSymbols();
-                log.Debug("Debug symbols found and loaded");
+                log.Debug("Debug symbols were found and loaded.");
                 return true;
             }
             catch (Exception e)
             {
-                log.Debug(e, "Reading debug symbols failed");
+                log.Debug(e, "Reading debug symbols failed.");
                 return false;
             }
         }
@@ -80,7 +80,7 @@ namespace Sigourney
                 weaverName = weaverAssembly.GetName().Name!;
                 log.Debug(
                     "No weaver name was supplied; it is inferred from " +
-                    "the weaving delegate's assembly to be {WeaverName}", weaverName);
+                    "the weaving delegate's assembly to be {WeaverName:l}.", weaverName);
             }
 
             var assemblyVersion = GetAssemblyVersion(weaverAssembly);
@@ -106,12 +106,12 @@ namespace Sigourney
                 {
                     if (!fWeave(asm))
                     {
-                        log.Debug("Skipping weaving {AssemblyName} because the weaving function returned false",
+                        log.Debug("Skipping weaving {AssemblyName:l} because the weaving function returned false.",
                             assemblyName);
                         return;
                     }
 
-                    log.Debug("Weaving {AssemblyName} succeeded", assemblyName);
+                    log.Debug("Weaving {AssemblyName:l} succeeded.", assemblyName);
 
                     AssemblyMarker.MarkAsProcessed(asm, weaverName, assemblyVersion, log);
                     var writerParams = new WriterParameters
@@ -124,8 +124,8 @@ namespace Sigourney
                 }
                 else
                     log.Debug(
-                        "Skipping weaving {AssemblyName} because it already" +
-                        "has a type named ProcessedBy{WeaverName}", assemblyName, weaverName);
+                        "Skipping weaving {AssemblyName:l} because it already" +
+                        "has a type named ProcessedBy{WeaverName:l}.", assemblyName, weaverName);
             }
         }
     }

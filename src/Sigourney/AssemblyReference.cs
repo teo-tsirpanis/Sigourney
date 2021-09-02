@@ -98,7 +98,7 @@ namespace Sigourney
             if (ReferenceEquals(this, obj)) return 0;
             return obj is AssemblyReference other
                 ? CompareTo(other)
-                : throw new ArgumentException($"Object must be of type {nameof(AssemblyReference)}", nameof(obj));
+                : throw new ArgumentException($"Object must be of type {nameof(AssemblyReference)}.", nameof(obj));
         }
 
         /// <inheritdoc/>
@@ -144,14 +144,14 @@ namespace Sigourney
         /// <inheritdoc/>
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
-            _log.Verbose("Cecil requested to resolve assembly {AssemblyName}", name);
+            _log.Verbose("Cecil requested to resolve assembly {AssemblyName:l}.", name);
             return _assemblyCache.GetOrAdd(name.FullName, key => {
                 if (_assemblyNameLookup.TryGetValue(key, out var path)) {
-                    _log.Verbose("Assembly recognized as project reference, loading it for the first time");
+                    _log.Verbose("Assembly recognized as project reference, loading it for the first time.");
                     return AssemblyDefinition.ReadAssembly(path);
                 }
 
-                _log.Verbose("Unrecognized assembly, falling back to Cecil's resolver");
+                _log.Verbose("Unrecognized assembly, falling back to Cecil's resolver.");
                 return base.Resolve(name);
             });
         }

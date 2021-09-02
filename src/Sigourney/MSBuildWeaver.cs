@@ -57,13 +57,6 @@ namespace Sigourney
         public string? OutputPath { get; set; }
 
         /// <summary>
-        /// Unused and ignored as of Sigourney 0.3.0.
-        /// Preserved for backwards compatibility.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public string? OutputSentinel { get; set; }
-
-        /// <summary>
         /// Additional configuration that enhances Sigourney's functionality.
         /// </summary>
         /// <remarks>
@@ -122,8 +115,6 @@ namespace Sigourney
         /// </returns>
         public override bool Execute()
         {
-            // .NET Framework-based MSBuild uses the Sigourney.dll at the Sigourney package
-            // directory, while dotnet msbuild uses the Sigourney.dll next to the weaver.
             Log.LogMessage(MessageImportance.Low, "Using Sigourney's assembly at {0}",
                 typeof(MSBuildWeaver).Assembly.Location);
 

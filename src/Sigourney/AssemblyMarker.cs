@@ -18,7 +18,7 @@ namespace Sigourney
         {
             var name = GetProcessedByClassName(weaverName);
 
-            log.Debug("Adding the {ProcessedBy} class", name);
+            log.Debug("Adding the {ProcessedBy:l} class.", name);
             const TypeAttributes typeAttributes =
                 TypeAttributes.NotPublic | TypeAttributes.Abstract | TypeAttributes.Sealed;
             var td = new TypeDefinition("", name, typeAttributes, asm.MainModule.TypeSystem.Object);
