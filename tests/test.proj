@@ -31,7 +31,8 @@ https://opensource.org/licenses/MIT
       Properties="Version=$(LocalPackageVersion);PackageOutputPath=$(LocalPackagePath)" />
   </Target>
   <Target Name="RunBuildTests" DependsOnTargets="PrepareSigourneyLocalPackages">
-    <MSBuild Projects="@(BuildTest)" Targets="Restore;Build" />
+    <Exec Command="dotnet restore %(BuildTest.Identity)" />
+    <MSBuild Projects="@(BuildTest)" Targets="Build" />
   </Target>
 
   <Target Name="BuildTestProgram" DependsOnTargets="PrepareSigourneyLocalPackages">
