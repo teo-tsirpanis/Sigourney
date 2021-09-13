@@ -88,6 +88,8 @@ __TL;DR:__ Since all known weavers are first-party, backwards compatibility is n
 
 Sigourney is a .NET Standard 2.0 library, meaning that it will work in both .NET Framework and .NET Core-based editions of MSBuild (the former are used with the `msbuild` command or on Visual Studio for Windows, and the latter when using modern `dotnet` SDK commands). Unless an assembly with a weaver targets .NET Standard too, its author has to load the correct assembly using MSBuild's `MSBuildRuntimeType` property.
 
+Weavers using Sigourney do not support NuGet clients older than 5.0, which was released with Visual Studio 2019. The [Paket](https://fsprojects.github.io/Paket) package manager is not tested.
+
 Because Mono.Cecil treats assemblies in a framework-agnostic way, Sigourney should work with any framework version supported by your SDK.
 
 No MSBuild version is explicitly supported or unsupported, but Sigourney is only tested against the latest one. Earlier ones might be supported, or maybe not.

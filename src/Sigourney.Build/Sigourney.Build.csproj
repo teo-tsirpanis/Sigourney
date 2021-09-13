@@ -6,6 +6,8 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
     <PackageReleaseNotes>Please take a look at the release notes of https://www.nuget.org/packages/Sigourney/.</PackageReleaseNotes>
+    <!-- The buildTransitive folder is recognized starting from NuGet 5.0. -->
+    <MinClientVersion>5.0</MinClientVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="build/**" Pack="true" PackagePath="build" />
