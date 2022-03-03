@@ -124,7 +124,7 @@ namespace Sigourney
                 }
                 else
                     log.Debug(
-                        "Skipping weaving {AssemblyName:l} because it already" +
+                        "Skipping weaving {AssemblyName:l} because it already " +
                         "has a type named ProcessedBy{WeaverName:l}.", assemblyName, weaverName);
             }
         }
