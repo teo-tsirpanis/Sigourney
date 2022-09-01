@@ -1,7 +1,7 @@
 # Sigourney
 
 [![NuGet](https://img.shields.io/nuget/v/Sigourney)][nuget]
-[![.NET Build Status](https://img.shields.io/appveyor/ci/teo-tsirpanis/Sigourney/master.svg)][sigourney]
+[![.NET Build Status](https://img.shields.io/appveyor/ci/teo-tsirpanis/Sigourney/mainstream.svg)][sigourney]
 
 Sigourney is a lightweight toolkit that helps developers write weavers, tools that modify other .NET assemblies using [Mono.Cecil][cecil].
 
@@ -126,6 +126,6 @@ The code that handles strong-named assemblies was originally copied from Fody. I
 [fody]: https://github.com/Fody/Fody
 [fody-licensing]: https://github.com/Fody/Home/blob/master/pages/licensing-patron-faq.md
 [fody-weavers]: https://github.com/Fody/Home/blob/master/pages/addins.md
-[testweaver1]: https://github.com/teo-tsirpanis/Sigourney/tree/master/tests/testweaver-1
-[weaver-class]: https://github.com/teo-tsirpanis/Sigourney/tree/master/src/Sigourney/Weaver.cs
+[testweaver1]: https://github.com/teo-tsirpanis/Sigourney/tree/mainstream/tests/testweaver-1
+[weaver-class]: https://github.com/teo-tsirpanis/Sigourney/tree/mainstream/src/Sigourney/Weaver.cs
 [mit]: https://opensource.org/licenses/MIT
