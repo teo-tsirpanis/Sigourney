@@ -1,6 +1,6 @@
 #! /usr/bin/env pwsh
 # This little script runs Sigourney's test project many times to ensure it works repeatedly.
-# It also keeps binary logs of each test run (which are kept as artifacts by AppVeyor).
+# It also keeps binary logs of each test run (which are kept as artifacts by CI).
 
 function DotnetClean {dotnet clean /v:m /nodereuse:false $TestProject}
 function Remove-Directory-Checked {
@@ -28,5 +28,4 @@ function Invoke-MSBuild-Test {
 Invoke-MSBuild-Test "dotnet" "msbuild"
 if ($IsWindows -and ($LASTEXITCODE -eq 0)) {Invoke-MSBuild-Test "msbuild" ""}
 
-Compress-Archive $TestLogs -DestinationPath "test-logs.zip" -Force
 exit $LASTEXITCODE
