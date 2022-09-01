@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TestWeaver2Assembly Condition="$(MSBuildRuntimeType) == Full">$(MSBuildThisFileDirectory)../tools/netstandard2.0/testweaver-2.dll</TestWeaver2Assembly>
-    <TestWeaver2Assembly Condition="$(MSBuildRuntimeType) != Full">$(MSBuildThisFileDirectory)../tools/netcoreapp3.1/testweaver-2.dll</TestWeaver2Assembly>
+    <TestWeaver2Assembly Condition="$(MSBuildRuntimeType) != Full">$(MSBuildThisFileDirectory)../tools/net6.0/testweaver-2.dll</TestWeaver2Assembly>
     <SigourneyRegisteredTargetFiles>$(SigourneyRegisteredTargetFiles);$(MSBuildThisFileDirectory)testweaver-2.Sigourney.targets</SigourneyRegisteredTargetFiles>
     <SigourneyRegisteredTargets>$(SigourneyRegisteredTargets);RunTestWeaver2</SigourneyRegisteredTargets>
   </PropertyGroup>
