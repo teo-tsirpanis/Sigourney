@@ -40,7 +40,7 @@ https://opensource.org/licenses/MIT
     <MSBuild Projects="$(TestProgram)" Targets="Build" />
   </Target>
   <Target Name="RunTestProgram" DependsOnTargets="BuildTestProgram">
-    <Exec Command="dotnet run -p $(TestProgram) --no-build" />
+    <Exec Command="dotnet run --project $(TestProgram) --no-build" />
   </Target>
 
   <Target Name="Clean">
