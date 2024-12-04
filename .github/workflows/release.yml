@@ -21,7 +21,7 @@ jobs:
         id: pack-options-nightly
         run: echo "value=--version-suffix ${{ github.event_name == 'push' && 'nightly' || github.ref_name }}.${{ github.run_number }}" >> $GITHUB_OUTPUT
       - name: Pack
-        run: dotnet pack -c Release -o ./pack ${{ steps.pack-options-nightly.outputs.value }}
+        run: dotnet pack ./Sigourney.Shipping.slnf -c Release -o ./pack ${{ steps.pack-options-nightly.outputs.value }}
       - name: Upload package artifacts
         uses: actions/upload-artifact@v4
         with:

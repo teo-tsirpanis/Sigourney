@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "Sigourney.sln",
+    "projects": [
+      "src\\Sigourney.Build\\Sigourney.Build.csproj",
+      "src\\Sigourney\\Sigourney.csproj"
+    ]
+  }
+}
