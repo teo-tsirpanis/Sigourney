@@ -12,9 +12,6 @@ Legacy code that was supporting weavers targeting versions of Sigourney prior to
 Version 4.0.1 fixed a bug where Sigourney did not run on F#.</PackageReleaseNotes>
     <PackageTags>$(PackageTags);Cecil</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
