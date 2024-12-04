@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 using Mono.Cecil;
 using Serilog;
 
@@ -18,7 +17,6 @@ namespace Sigourney
     /// </summary>
     /// <remarks>The type's fully qualified name does not imply
     /// an endorsement or support of any kind from anyone.</remarks>
-    [PublicAPI]
     public static class Weaver
     {
         private static string GetAssemblyVersion(Assembly asm)

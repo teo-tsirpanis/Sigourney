@@ -8,7 +8,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 using Mono.Cecil;
 using Serilog;
 
@@ -20,7 +19,6 @@ namespace Sigourney
     /// </summary>
     /// <remarks>Two <see cref="AssemblyReference"/> objects are
     /// considered as equal if they point to the same file name.</remarks>
-    [PublicAPI]
     public sealed class AssemblyReference : IEquatable<AssemblyReference>, IComparable<AssemblyReference>, IComparable
     {
         /// <summary>
