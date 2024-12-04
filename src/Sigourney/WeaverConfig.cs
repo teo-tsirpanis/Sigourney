@@ -35,8 +35,8 @@ namespace Sigourney
         /// <summary>
         /// The "obj/" directory used in the build.
         /// </summary>
-        /// <remarks>It is derieved from the MSBuild
-        /// "IntermediateDirectory" property.</remarks>
+        /// <remarks>It is derieved from the MSBuild "IntermediateOutputPath" property.</remarks>
+        // TODO: Deprecate in the next minor release and replace with IntermediateOutputPath.
         public string? IntermediateDirectory { get; set; }
 
         /// <summary>

@@ -8,8 +8,7 @@ https://opensource.org/licenses/MIT
   TreatAsLocalProperty="_SigourneyEnable">
   <Import Project="$(MSBuildThisFileDirectory)Sigourney.PublishMode.targets" />
   <PropertyGroup>
-    <IntermediateDirectory>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDirectory>
-    <ProcessedBySigourney>$(IntermediateDirectory)ProcessedBySigourney</ProcessedBySigourney>
+    <ProcessedBySigourney>$(IntermediateOutputPath)ProcessedBySigourney</ProcessedBySigourney>
     <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
   </PropertyGroup>
 
@@ -21,7 +20,7 @@ https://opensource.org/licenses/MIT
     <ItemGroup>
       <SigourneyConfiguration Include="Sigourney default configuration">
         <SignAssembly>$(SignAssembly)</SignAssembly>
-        <IntermediateDirectory>$(IntermediateDirectory)</IntermediateDirectory>
+        <IntermediateDirectory>$(IntermediateOutputPath)</IntermediateDirectory>
         <KeyOriginatorFile>$(KeyOriginatorFile)</KeyOriginatorFile>
         <AssemblyOriginatorKeyFile>$(AssemblyOriginatorKeyFile)</AssemblyOriginatorKeyFile>
         <References>@(ReferencePath)</References>
