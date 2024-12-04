@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using JetBrains.Annotations;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
@@ -14,7 +13,6 @@ namespace Sigourney
     /// <summary>
     /// An abstract MSBuild task that weaves assemblies with Sigourney.
     /// </summary>
-    [PublicAPI]
     public abstract class MSBuildWeaver : Task
     {
         private static readonly List<AssemblyReference> _emptyReferenceList = new List<AssemblyReference>();

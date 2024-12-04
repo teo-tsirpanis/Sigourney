@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - mainstream
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+      - name: Add nightly pack options
+        if: github.event_name != 'release'
+        id: pack-options-nightly
+        run: echo "value=--version-suffix ${{ github.event_name == 'push' && 'nightly' || github.ref_name }}.${{ github.run_number }}" >> $GITHUB_OUTPUT
+      - name: Pack
+        run: dotnet pack -c Release -o ./pack ${{ steps.pack-options-nightly.outputs.value }}
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: ./pack
+  release:
+    needs: pack
+    environment: ${{ github.event_name == 'release' && 'release' || 'nightly' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+      - name: Download package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: ./pack
+      - name: Publish
+        run: dotnet nuget push ./pack/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source ${{ vars.NUGET_FEED }}
