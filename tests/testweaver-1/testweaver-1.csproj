@@ -1,16 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- With this switch, Sigourney will pack the weaver with its dependencies
-    and place it in a "tools" folder. If the weaver was multitargeted, it supports
-    it as well. The package path can be customized with the "SigourneyPublishPackageTarget"
-    property. This option is useful for any MSBuild task package even when it's not using Sigourney. -->
-    <SigourneyPublish>true</SigourneyPublish>
-    <!-- We don't want the weaver to be packed as a library too, under the "lib" folder. -->
-    <IncludeBuildOutput>false</IncludeBuildOutput>
     <Version>0.0.0-local</Version>
-    <!-- NU5128 (not verbatim): We are depending on a package but this package does not provide a library
-    because we disabled IncludeBuildOutput above. -->
+    <!-- NU5128: Some target frameworks declared in the dependencies group of the nuspec and
+    the lib/ref folder do not have exact matches in the other location.
+    This is not a problem because we intentionally do not publish assets in the lib folder. -->
     <!-- NU5129: At least one .targets file was found in 'build/', but 'build/testweaver-1.targets' was not.
     This is not a problem here since we didn't create an additional targets file. -->
     <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
@@ -18,9 +12,37 @@
   <ItemGroup>
     <None Include="build/**" Pack="true" PackagePath="build" />
     <!-- The PrivateAssets attribute means that we don't want any package using this weaver
-    to reference Sigourney as well. But we still want it bundled, which is the reason for Publish.
-    And version 0.0.0-local is not on NuGet; it's a special version for local testing. -->
-    <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="all" Publish="true" />
+    to reference Sigourney as well. Version 0.0.0-local is not on NuGet; it's a special version
+    for local testing. -->
+    <PackageReference Include="Sigourney" Version="0.0.0-local" PrivateAssets="all" />
     <PackageReference Include="Sigourney.Build" Version="0.0.0-local" />
   </ItemGroup>
+  <!-- Add the necessary properties and targets to tell MSBuild to pack the weaver alongside its
+  dependencies and place it in in a "tools" folder. Code taken from
+  https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation-->
+  <PropertyGroup>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <BuildOutputTargetFolder>tools</BuildOutputTargetFolder>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <Target
+      Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput"
+      BeforeTargets="BuiltProjectOutputGroup">
+    <ItemGroup>
+      <BuiltProjectOutputGroupOutput
+        Include="$(ProjectDepsFilePath)"
+        TargetPath="$(ProjectDepsFileName)"
+        FinalOutputPath="$(ProjectDepsFilePath)" />
+    </ItemGroup>
+  </Target>
+  <Target
+    Name="CopyProjectReferencesToPackage"
+    DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+        <BuildOutputInPackage
+            Include="@(ReferenceCopyLocalPaths)"
+            TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
+    </ItemGroup>
+  </Target>
 </Project>

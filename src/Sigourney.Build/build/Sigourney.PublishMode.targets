@@ -13,6 +13,7 @@ https://opensource.org/licenses/MIT
   </PropertyGroup>
 
   <Target Name="PreparePack" Condition="$(SigourneyPublish) == true">
+    <Warning Text="The SigourneyPublish property is deprecated and will be removed in a future version. Follow the official guideance at https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation in order to properly package the weaver and its dependencies." />
     <ItemGroup>
       <_FrameworksToBuild Include="$(TargetFrameworks)" />
       <_FrameworksToBuild Include="$(TargetFramework)" Condition="'@(_FrameworksToBuild)' == ''" />
