@@ -2,7 +2,9 @@
   <Import Project="../nuget.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>MSBuild targets for Sigourney. Weaver packages must publicly reference this package, otherwise Sigourney will not run.</Description>
+    <Description>Provides MSBuild targets for Sigourney. Weaver packages must publicly reference this package, otherwise Sigourney will not run.
+
+Minor versions of this package are compatible with weavers that are using the same minor version band of the main Sigourney package.</Description>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
     <PackageReleaseNotes>Please take a look at the release notes of https://www.nuget.org/packages/Sigourney/.</PackageReleaseNotes>
