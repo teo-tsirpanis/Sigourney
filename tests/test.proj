@@ -6,46 +6,31 @@ https://opensource.org/licenses/MIT
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test">
   <PropertyGroup>
-    <LocalPackagePath>$(MSBuildThisFileDirectory)packages/</LocalPackagePath>
     <TestProgram>$(MSBuildThisFileDirectory)Sigourney.Tests/Sigourney.Tests.csproj</TestProgram>
-    <LocalPackageVersion>0.0.0-local</LocalPackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <SigourneyLibraries Include="$(MSBuildThisFileDirectory)../src/**/*.csproj" />
     <!-- We only want to build these projects. -->
     <BuildTest Include="./buildtest-*/*.csproj" />
     <LocalPackage Include="./testweaver-*/*.csproj" />
   </ItemGroup>
 
-  <Target Name="PrepareSigourneyLocalPackages" Condition="'$(TestExecutionNumber)' == '' OR $(TestExecutionNumber) == 1">
-    <MakeDir Directories="$(LocalPackagePath)" />
-    <Exec Command="dotnet restore %(SigourneyLibraries.Identity)" />
-    <MSBuild
-      Projects="@(SigourneyLibraries)"
-      Targets="Pack"
-      Properties="Version=$(LocalPackageVersion);PackageOutputPath=$(LocalPackagePath)" />
-    <Exec Command="dotnet restore %(LocalPackage.FullPath)" />
-    <MSBuild
-      Projects="@(LocalPackage)"
-      Targets="Pack"
-      Properties="Version=$(LocalPackageVersion);PackageOutputPath=$(LocalPackagePath)" />
-  </Target>
-  <Target Name="RunBuildTests" DependsOnTargets="PrepareSigourneyLocalPackages">
-    <Exec Command="dotnet restore %(BuildTest.Identity)" />
-    <MSBuild Projects="@(BuildTest)" Targets="Build" />
+  <Target Name="Restore">
+    <MSBuild Projects="@(BuildTest);$(TestProgram)" Targets="Restore" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
-  <Target Name="BuildTestProgram" DependsOnTargets="PrepareSigourneyLocalPackages">
-    <Exec Command="dotnet restore $(TestProgram)" />
-    <MSBuild Projects="$(TestProgram)" Targets="Build" />
+  <Target Name="RunBuildTests">
+    <MSBuild Projects="@(BuildTest)" Targets="Build" BuildInParallel="$(BuildInParallel)" />
+  </Target>
+
+  <Target Name="BuildTestProgram">
+    <MSBuild Projects="$(TestProgram)" Targets="Build" BuildInParallel="$(BuildInParallel)" />
   </Target>
   <Target Name="RunTestProgram" DependsOnTargets="BuildTestProgram">
     <Exec Command="dotnet run --project $(TestProgram) --no-build" />
   </Target>
 
   <Target Name="Clean">
-    <MSBuild Projects="@(BuildTest);@(LocalPackage);$(TestProgram)" Targets="Clean" />
-    <RemoveDir Directories="$(LocalPackagePath)" />
+    <MSBuild Projects="@(BuildTest);$(TestProgram)" Targets="Clean" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="RunBuildTests;RunTestProgram" />

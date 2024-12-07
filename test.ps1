@@ -2,7 +2,6 @@
 # This little script runs Sigourney's test project many times to ensure it works repeatedly.
 # It also keeps binary logs of each test run (which are kept as artifacts by CI).
 
-function DotnetClean {dotnet clean /v:m /nodereuse:false $TestProject}
 function Remove-Directory-Checked {
     param ([string]$Directory)
     if (Test-Path $Directory -PathType Container) {
@@ -10,22 +9,31 @@ function Remove-Directory-Checked {
     }
 }
 
+$ErrorActionPreference = 'Stop'
+
 $TestLogs = './test-logs/'
 $TestProject = './tests/test.proj'
+$LocalPackagePath = './tests/packages'
+$LocalPackages = Get-ChildItem './tests' -Filter 'testweaver-*.csproj' -Recurse | ForEach-Object { $_.FullName }
 
+Remove-Directory-Checked $LocalPackagePath
 Remove-Directory-Checked $TestLogs
 # dotnet clean might fail the first time.
 Remove-Item tests\**\obj\* -Recurse -Force
 
 function Invoke-MSBuild-Test {
     param ([string]$MSBuildCommand, [string]$CommandPrefix)
-    DotnetClean
+    dotnet clean /v:m /nodereuse:false $TestProject
     for ($i = 1; ($i -le 3) -and ($LASTEXITCODE -eq 0); $i++) {
-        & $MSBuildCommand ($CommandPrefix, $TestProject, "/v:m", "/p:TestExecutionNumber=$i", "/nodereuse:false", "/bl:$TestLogs$MSBuildCommand-$i.binlog")
+        $target = if ($i -eq 1) { "Clean;Test" } else { "Test" }
+        $testArgs = @($CommandPrefix, $TestProject, "/v:m", "/t:$target", "/nodereuse:false", "/bl:$TestLogs$MSBuildCommand-$i.binlog")
+        if ($i -eq 1) { $testArgs += "/restore" }
+        & $MSBuildCommand @testArgs
     }
 }
 
+dotnet pack ./Sigourney.Shipping.slnf -o $LocalPackagePath -p:Version=0.0.0-local
+$LocalPackages | ForEach-Object {dotnet pack $_ -o $LocalPackagePath}
+
 Invoke-MSBuild-Test "dotnet" "msbuild"
 if ($IsWindows -and ($LASTEXITCODE -eq 0)) {Invoke-MSBuild-Test "msbuild" ""}
-
-exit $LASTEXITCODE
