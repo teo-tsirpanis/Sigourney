@@ -36,7 +36,7 @@ In its essence, Sigourney is a thin layer over Mono.Cecil (Fody is arguably thic
 
 * Assemblies weaved by Sigourney are marked with a type having a name like `ProcessedByMyAwesomeWeaver`. If your awesome weaver attempts to weave the same assembly more than once, Sigourney will do nothing.
 * Sigourney provides easy MSBuild integration of your weavers, allowing them to run when you build your project, without any extra steps. More on that right below.
-* Sigourney supports strong-named assemblies easily ([with a caveat](#known-issues)), abstracting away most of the logic behind finding the `.snk` files.
+* Sigourney supports strong-named assemblies easily, abstracting away most of the logic behind finding the `.snk` files.
 * Sigourney automatically updates the debug symbols of the assemblies, allowing them to still be debugged.
 
 ## How to use
@@ -100,7 +100,7 @@ Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y
 
 ## Known issues
 
-* Strong-naming assemblies is not supported when you build your project using a .NET Core-based edition of MSBuild.
+* ~~Strong-naming assemblies is not supported when you build your project using a .NET Core-based edition of MSBuild.~~ Fixed in version 0.5.0.
 
 *
     When you build a project with many weavers using a .NET Framework-based edition of MSBuild, each weaver's dependencies are not isolated. For example, if your project uses two weavers and each of them uses a different version of Sigourney, MSBuild will only use the version of Sigourney that the weaver that ran first used. This is an inherent limitation of the .NET Framework whose fix is not trivial and not planned for Sigourney.

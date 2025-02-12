@@ -98,7 +98,7 @@ namespace Sigourney
             {
                 var assemblyName = asm.Name.Name;
                 var hasSymbols = TryReadSymbols(asm, log);
-                StrongNameKeyFinder.FindStrongNameKey(config, asm, log, out var keyPair, out var publicKey);
+                var keyBlob = StrongNameKeyFinder.FindStrongNameKey(config, asm, log);
 
                 if (AssemblyMarker.ShouldProcess(asm, weaverName))
                 {
@@ -114,10 +114,9 @@ namespace Sigourney
                     AssemblyMarker.MarkAsProcessed(asm, weaverName, assemblyVersion, log);
                     var writerParams = new WriterParameters
                     {
-                        StrongNameKeyPair = keyPair,
+                        StrongNameKeyBlob = keyBlob,
                         WriteSymbols = hasSymbols
                     };
-                    asm.Name.PublicKey = publicKey;
                     asm.Write(writerParams);
                 }
                 else

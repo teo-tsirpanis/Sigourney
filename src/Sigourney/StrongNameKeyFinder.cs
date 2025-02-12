@@ -6,10 +6,8 @@
 // Source code based on Fody.
 // https://github.com/Fody/Fody/blob/6.1.0/FodyIsolated/StrongNameKeyFinder.cs
 
-using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Mono.Cecil;
 using Serilog;
 
@@ -17,38 +15,14 @@ namespace Sigourney
 {
     internal static class StrongNameKeyFinder
     {
-        internal static void FindStrongNameKey(WeaverConfig? config, AssemblyDefinition asm, ILogger log,
-            out StrongNameKeyPair? keyPair, out byte[]? publicKey)
+        internal static byte[]? FindStrongNameKey(WeaverConfig? config, AssemblyDefinition asm, ILogger log)
         {
-            keyPair = null;
-            publicKey = null;
-
-            if (config == null || !config.SignAssembly) return;
+            if (config == null || !config.SignAssembly) return null;
 
             var keyFilePath = GetKeyFilePath(config, asm, log);
-            if (keyFilePath == null) return;
+            if (keyFilePath == null) return null;
 
-            if (!File.Exists(keyFilePath))
-                throw new FileNotFoundException("KeyFilePath was defined but file does not exist.", keyFilePath);
-
-            var fileBytes = File.ReadAllBytes(keyFilePath);
-            keyPair = new StrongNameKeyPair(fileBytes);
-
-            try
-            {
-                publicKey = keyPair.PublicKey;
-            }
-            catch (ArgumentException e)
-            {
-                log.Debug(e, "Exception while trying to load strong-name key pair.");
-                keyPair = null;
-                publicKey = fileBytes;
-            }
-            catch (NotSupportedException)
-            {
-                log.Warning("Sigourney does not support strong naming on some platforms like .NET Core-based MSBuild.");
-                throw;
-            }
+            return File.ReadAllBytes(keyFilePath);
         }
 
         private static string? GetKeyFilePath(WeaverConfig config, AssemblyDefinition asm, ILogger log)
