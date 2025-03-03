@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Mono.Cecil;
@@ -40,18 +41,28 @@ namespace Sigourney
 
             using var asm = AssemblyDefinition.ReadAssembly(fileName);
             // https://github.com/dotnet/runtime/issues/35449#issuecomment-620156856
+#pragma warning disable CS0618 // Type or member is obsolete
             IsReferenceAssembly =
                 asm.Name.Attributes.HasFlag((AssemblyAttributes) 0x70)
                 || asm.CustomAttributes.Any(attr =>
                     attr.AttributeType.FullName.Equals(typeof(ReferenceAssemblyAttribute).FullName,
                         StringComparison.Ordinal));
+#pragma warning restore CS0618 // Type or member is obsolete
             AssemblyName = asm.Name;
         }
 
         /// <summary>
-        /// Whether the assembly is recognized by either .NET
-        /// Framework or .NET Core/.NET 5+ as a reference assembly.
+        /// Obsolete, do not use.
         /// </summary>
+        /// <remarks>
+        /// Some weavers load the input assembly to execute code from it, and use this property to determine which assemblies to use
+        /// for dependency resolution. This approach is fundamentally wrong, because the assemblies that are passed to the compiler
+        /// are not always the assemblies that will be loaded at runtime, and if a dependent package starts supplying reference assemblies,
+        /// the weaver will break. Weavers that execute code from the input assembly should gather these assemblies from MSBuild and pass
+        /// them to the weaver themselves.
+        /// </remarks>
+        [Obsolete("Assembly references passed to Sigourney should be used for metadata retrieval only.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsReferenceAssembly { get; }
 
         /// <summary>
