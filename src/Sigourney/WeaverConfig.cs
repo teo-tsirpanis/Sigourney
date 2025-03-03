@@ -33,6 +33,12 @@ namespace Sigourney
         public bool SignAssembly { get; set; }
 
         /// <summary>
+        /// Whether the assembly is strong-named with delay-signing.
+        /// </summary>
+        /// <remarks>It is derived from the MSBuild <c>DelaySign</c> property.</remarks>
+        public bool DelaySign { get; set; }
+
+        /// <summary>
         /// The "obj/" directory used in the build.
         /// </summary>
         /// <remarks>It is derieved from the MSBuild "IntermediateOutputPath" property.</remarks>
@@ -69,8 +75,11 @@ namespace Sigourney
                 return string.IsNullOrEmpty(value) ? null : value;
             }
 
-            if (bool.TryParse(item.GetMetadata(nameof(SignAssembly)), out var result))
-                config.SignAssembly = result;
+            bool GetMetadataBool(string key) =>
+                bool.TryParse(item.GetMetadata(key), out bool result) && result;
+
+            config.DelaySign = GetMetadataBool(nameof(DelaySign));
+            config.SignAssembly = GetMetadataBool(nameof(SignAssembly));
 
             var keyOriginatorFile = GetMetadata("KeyOriginatorFile");
             var assemblyOriginatorKeyFile = GetMetadata("AssemblyOriginatorKeyFile");

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020 Theodore Tsirpanis
+// Copyright (c) 2020 Theodore Tsirpanis
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -98,7 +98,7 @@ namespace Sigourney
             {
                 var assemblyName = asm.Name.Name;
                 var hasSymbols = TryReadSymbols(asm, log);
-                var keyBlob = StrongNameKeyFinder.FindStrongNameKey(config, asm, log);
+                var keyBlob = ReadStrongNameKey(config, log);
 
                 if (AssemblyMarker.ShouldProcess(asm, weaverName))
                 {
@@ -125,5 +125,39 @@ namespace Sigourney
                         "has a type named ProcessedBy{WeaverName:l}.", assemblyName, weaverName);
             }
         }
+
+        private static byte[]? ReadStrongNameKey(WeaverConfig? config, ILogger log)
+        {
+            // If the assembly is delay-signed, do nothing. The compiler has already
+            // set the public key in the name. It was also noticed that Cecil always
+            // reserves space for the signature.
+            if (config == null || !config.SignAssembly || config.DelaySign) return null;
+
+            var keyFilePath = config.KeyFilePath;
+            if (string.IsNullOrEmpty(keyFilePath))
+            {
+                return null;
+            }
+
+            // Unlike Fody, we don't try to read the key path from the assembly's attributes.
+            // Weaving usually runs close to the build process, and the key file is expected
+            // to be provided by MSBuild.
+
+            keyFilePath = Path.GetFullPath(keyFilePath!);
+            log.Debug("Using strong name key from KeyFilePath {KeyFilePath}.", keyFilePath);
+            var keyBlob = File.ReadAllBytes(keyFilePath);
+            if (!IsPrivateKeyFile(keyBlob))
+            {
+                log.Debug("Key file is not a private key file; ignoring it.");
+            }
+            return keyBlob;
+        }
+
+        private static bool IsPrivateKeyFile(byte[] blob) => blob.Length >= 12
+            && blob[0] == 0x07 // PRIVATEKEYBLOB (0x07)
+            && blob[1] == 0x02 // Version (0x02)
+            && blob[2] == 0x00 // Reserved (word)
+            && blob[3] == 0x00
+            && BitConverter.ToUInt32(blob, 8) == 0x32415352; // DWORD magic = RSA2
     }
 }
