@@ -20,35 +20,33 @@ namespace Sigourney
         /// <summary>
         /// The file path to the strong-name key (.snk) of the assembly.
         /// </summary>
-        /// <remarks>It is derived from the MSBuild "KeyOriginatorFile"
-        /// and "AssemblyOriginatorKeyFile" properties (the first, and
+        /// <remarks>It is populated with the MSBuild <c>KeyOriginatorFile</c>
+        /// and <c>AssemblyOriginatorKeyFile</c> properties (the first, and
         /// if it does not exist, the second one).</remarks>
         public string? KeyFilePath { get; set; }
 
         /// <summary>
         /// Whether the assembly is strong-named.
         /// </summary>
-        /// <remarks>It is derived from the MSBuild
-        /// "SignAssembly" property.</remarks>
+        /// <remarks>It is populated with the MSBuild <c>SignAssembly</c> property.</remarks>
         public bool SignAssembly { get; set; }
 
         /// <summary>
         /// Whether the assembly is strong-named with delay-signing.
         /// </summary>
-        /// <remarks>It is derived from the MSBuild <c>DelaySign</c> property.</remarks>
+        /// <remarks>It is populated with the MSBuild <c>DelaySign</c> property.</remarks>
         public bool DelaySign { get; set; }
 
         /// <summary>
-        /// The "obj/" directory used in the build.
+        /// The <c>obj/</c> directory used in the build.
         /// </summary>
-        /// <remarks>It is derieved from the MSBuild "IntermediateOutputPath" property.</remarks>
-        // TODO: Deprecate in the next minor release and replace with IntermediateOutputPath.
+        /// <remarks>It is populated with the MSBuild <c>IntermediateOutputPath</c> property.</remarks>
         public string? IntermediateDirectory { get; set; }
 
         /// <summary>
         /// Additional assemblies that Mono.Cecil will take into consideration.
         /// </summary>
-        /// <remarks>It is derived from the MSBuild "ReferencePath" item</remarks>
+        /// <remarks>It is populated with the MSBuild <c>ReferencePath</c> item</remarks>
         public List<AssemblyReference> References { get; } = new List<AssemblyReference>();
 
         private static char[] _pathSeparator = new char[] { ';' };
@@ -67,25 +65,15 @@ namespace Sigourney
             if (items == null || items.Length != 1) return null;
 
             var item = items[0];
-            var config = new WeaverConfig();
-
-            string? GetMetadata(string key)
+            var config = new WeaverConfig
             {
-                var value = item.GetMetadata(key);
-                return string.IsNullOrEmpty(value) ? null : value;
-            }
+                DelaySign = GetMetadataBool(nameof(DelaySign)),
+                SignAssembly = GetMetadataBool(nameof(SignAssembly)),
 
-            bool GetMetadataBool(string key) =>
-                bool.TryParse(item.GetMetadata(key), out bool result) && result;
+                KeyFilePath = GetMetadata("KeyOriginatorFile") ?? GetMetadata("AssemblyOriginatorKeyFile"),
 
-            config.DelaySign = GetMetadataBool(nameof(DelaySign));
-            config.SignAssembly = GetMetadataBool(nameof(SignAssembly));
-
-            var keyOriginatorFile = GetMetadata("KeyOriginatorFile");
-            var assemblyOriginatorKeyFile = GetMetadata("AssemblyOriginatorKeyFile");
-            config.KeyFilePath = keyOriginatorFile ?? assemblyOriginatorKeyFile;
-
-            config.IntermediateDirectory = GetMetadata(nameof(IntermediateDirectory));
+                IntermediateDirectory = GetMetadata(nameof(IntermediateDirectory))
+            };
 
             var referencesMetadata = GetMetadata(nameof(References));
             if (referencesMetadata != null)
@@ -98,6 +86,15 @@ namespace Sigourney
             }
 
             return config;
+
+            string? GetMetadata(string key)
+            {
+                var value = item.GetMetadata(key);
+                return string.IsNullOrEmpty(value) ? null : value;
+            }
+
+            bool GetMetadataBool(string key) =>
+                bool.TryParse(item.GetMetadata(key), out bool result) && result;
         }
     }
 }
