@@ -9,6 +9,7 @@
         },
         "SigourneyRegisteredTargetFiles": {
             "defaultValue": "",
+            "deprecationMessage": "SigourneyRegisteredTargetFiles is deprecated. You can name your target files MyPackage.targets and NuGet will automatically import them.",
             "description": "A semicolon-separated list of files with weaver targets.",
             "type": "file",
             "isList": true

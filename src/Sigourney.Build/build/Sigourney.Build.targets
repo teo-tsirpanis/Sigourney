@@ -12,6 +12,10 @@ https://opensource.org/licenses/MIT
     <_SigourneyEnable Condition="$(SigourneyEnable) == false OR $(DesigntimeBuild) == true">false</_SigourneyEnable>
   </PropertyGroup>
 
+  <!-- Legacy property supported for compatibility reasons.
+  This property was introduced due to a misunderstanding of MSBuild's evaluation order, where actually the
+  order we import the target files doesn't matter. Because @(SigourneyConfiguration) gets populated inside
+  a target, it is guaranteed that it will be seen by the weaver targets that run afterwards. -->
   <Import
     Condition="$(_SigourneyEnable) != false AND '$(SigourneyRegisteredTargetFiles)' != ''"
     Project="$(SigourneyRegisteredTargetFiles)" />

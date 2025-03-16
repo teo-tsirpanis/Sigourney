@@ -1,6 +1,3 @@
-<!-- Once again, this file MUST NOT be called "testweaver-1.targets". If it was,
-NuGet would import it at a non-deterministic place in our project. By registering it as seen in
-testweaver-1.props, Sigourney will make sure this file is imported where it should be. -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- We import the task with the weaver. -->
   <UsingTask AssemblyFile="$(TestWeaver1Assembly)" TaskName="TestWeaver1" />
@@ -9,8 +6,9 @@ testweaver-1.props, Sigourney will make sure this file is imported where it shou
   <Target Name="RunTestWeaver1">
     <!-- Sigourney's MSBuildWeaver class defines some properties, of which only
     AssemblyPath is required. WeaverName is a unique friendly name for the weaver
-    that. Configuration is a blackbox that allows passing additional properties
-    (to support features like strong-naming) in a backwards-compatible way. -->
+    that gets written to the assembly. Configuration is a blackbox that allows
+    passing additional properties to support features like strong-naming in a
+    backwards-compatible way. -->
     <TestWeaver1
       AssemblyPath="@(IntermediateAssembly)"
       WeaverName="TestWeaver1"
