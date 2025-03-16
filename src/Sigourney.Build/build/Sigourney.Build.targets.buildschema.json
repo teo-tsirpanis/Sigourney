@@ -1,0 +1,34 @@
+{
+    "$schema": "https://github.com/mhutch/MonoDevelop.MSBuildEditor/raw/main/MonoDevelop.MSBuild/Schemas/buildschema.json",
+    "license": "MIT",
+    "properties": {
+        "SigourneyEnable": {
+            "defaultValue": "false",
+            "description": "Enables weaving the assembly with Sigourney after compilation.",
+            "type": "bool"
+        },
+        "SigourneyRegisteredTargetFiles": {
+            "defaultValue": "",
+            "description": "A semicolon-separated list of files with weaver targets.",
+            "type": "file",
+            "isList": true
+        },
+        "SigourneyRegisteredTargets": {
+            "defaultValue": "",
+            "description": "A semicolon-separated list of weaver targets.",
+            "type": "target-name",
+            "isList": true
+        }
+    },
+    "items": {
+        "SigourneyConfiguration": {
+            "description": "Opaque configuration for Sigourney, to be passed to the Configuration property of weaver tasks. Do not modify manually.",
+            "isSingleton": true
+        }
+    },
+    "targets": {
+        "SigourneyEntryPoint": {
+            "description": "Runs weaver targets declared in the SigouenryRegisteredTargetFiles property."
+        }
+    }
+}
