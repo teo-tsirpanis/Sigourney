@@ -2,7 +2,7 @@
   <PropertyGroup>
     <!-- It's a common practice to define the path of the assembly with a task here,
     in the props file. The project file can override it by setting the property again. -->
-    <TestWeaver1Assembly>$(MSBuildThisFileDirectory)../tools/netstandard2.0/testweaver-1.dll</TestWeaver1Assembly>
+    <TestWeaver1Assembly>$(MSBuildThisFileDirectory)../tools/netstandard2.0/Sigourney.TestWeaver1.dll</TestWeaver1Assembly>
     <!-- We also have to register the target that will execute the weaving task. -->
     <SigourneyRegisteredTargets>$(SigourneyRegisteredTargets);RunTestWeaver1</SigourneyRegisteredTargets>
   </PropertyGroup>

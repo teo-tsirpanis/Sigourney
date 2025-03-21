@@ -2,11 +2,6 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <Version>0.0.0-local</Version>
-    <!-- NU5128: Some target frameworks declared in the dependencies group of the nuspec and
-    the lib/ref folder do not have exact matches in the other location.
-    This is not a problem because we intentionally do not publish assets in the lib folder. -->
-    <!-- NU5129: At least one .targets file was found in 'build/', but 'build/testweaver-1.targets' was not.
-    This is not a problem here since we didn't create an additional targets file. -->
     <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
   </PropertyGroup>
   <ItemGroup>

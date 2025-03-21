@@ -45,7 +45,7 @@ In its essence, Sigourney is a thin layer over Mono.Cecil (Fody is arguably thic
 
 In most cases, using a weaver powered by Sigourney is as easy as installing a NuGet package. Consult the documentation of that package for more details.
 
-Sigourney has a particular pattern for creating MSBuild-based weavers that can coexist with others in the same project and support incremental building. To learn how to create a weaver based on that pattern, this repository has a sample project in [`tests/testweaver-1`][testweaver1].
+Sigourney has a particular pattern for creating MSBuild-based weavers that can coexist with others in the same project and support incremental building. To learn how to create a weaver based on that pattern, this repository has a sample project in [`tests/Sigourney.TestWeaver1`][testweaver1].
 
 To easily disable all weavers that were implemented according to the standard pattern, add the following line inside a `PropertyGroup` in your project file:
 
@@ -126,6 +126,6 @@ The code that handles strong-named assemblies was originally copied from Fody. I
 [fody]: https://github.com/Fody/Fody
 [fody-licensing]: https://github.com/Fody/Home/blob/master/pages/licensing-patron-faq.md
 [fody-weavers]: https://github.com/Fody/Home/blob/master/pages/addins.md
-[testweaver1]: https://github.com/teo-tsirpanis/Sigourney/tree/mainstream/tests/testweaver-1
+[testweaver1]: https://github.com/teo-tsirpanis/Sigourney/tree/mainstream/tests/Sigourney.TestWeaver1
 [weaver-class]: https://github.com/teo-tsirpanis/Sigourney/tree/mainstream/src/Sigourney/Weaver.cs
 [mit]: https://opensource.org/licenses/MIT

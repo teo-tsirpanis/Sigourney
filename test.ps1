@@ -14,9 +14,9 @@ $ErrorActionPreference = 'Stop'
 $TestLogs = './test-logs/'
 $TestProject = './tests/test.proj'
 $LocalPackagePath = './tests/packages'
-$LocalPackages = Get-ChildItem './tests' -Filter 'testweaver-*.csproj' -Recurse | ForEach-Object { $_.FullName }
+$LocalPackages = Get-ChildItem './tests' -Filter 'Sigourney.TestWeaver*.csproj' -Recurse | ForEach-Object { $_.FullName }
 
-Remove-Directory-Checked $LocalPackagePath
+Get-ChildItem $LocalPackagePath -Filter 'Sigourney*' | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
 Remove-Directory-Checked $TestLogs
 # dotnet clean might fail the first time.
 Remove-Item tests\**\obj\* -Recurse -Force
@@ -33,7 +33,7 @@ function Invoke-MSBuild-Test {
 }
 
 dotnet pack ./Sigourney.Shipping.slnf -o $LocalPackagePath -p:Version=0.0.0-local
-$LocalPackages | ForEach-Object {dotnet pack $_ -o $LocalPackagePath}
+$LocalPackages | ForEach-Object { dotnet pack $_ -o $LocalPackagePath }
 
 Invoke-MSBuild-Test "dotnet" "msbuild"
-if ($IsWindows -and ($LASTEXITCODE -eq 0)) {Invoke-MSBuild-Test "msbuild" ""}
+if ($IsWindows -and ($LASTEXITCODE -eq 0)) { Invoke-MSBuild-Test "msbuild" "" }

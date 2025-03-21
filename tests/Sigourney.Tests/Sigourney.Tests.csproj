@@ -6,7 +6,7 @@
     <AssemblyOriginatorKeyFile>Sigourney.Tests.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="testweaver-1" Version="0.0.0-local" PrivateAssets="all" />
-    <PackageReference Include="testweaver-2" Version="0.0.0-local" PrivateAssets="all" />
+    <PackageReference Include="Sigourney.TestWeaver1" Version="0.0.0-local" PrivateAssets="all" />
+    <PackageReference Include="Sigourney.TestWeaver2" Version="0.0.0-local" PrivateAssets="all" />
   </ItemGroup>
 </Project>

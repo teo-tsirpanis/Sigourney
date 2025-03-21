@@ -11,7 +11,7 @@ https://opensource.org/licenses/MIT
   <ItemGroup>
     <!-- We only want to build these projects. -->
     <BuildTest Include="./buildtest-*/*.csproj" />
-    <LocalPackage Include="./testweaver-*/*.csproj" />
+    <LocalPackage Include="./Sigourney.TestWeaver*/*.csproj" />
   </ItemGroup>
 
   <Target Name="Restore">

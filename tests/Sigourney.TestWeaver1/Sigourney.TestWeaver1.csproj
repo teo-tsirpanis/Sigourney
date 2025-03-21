@@ -5,7 +5,7 @@
     <!-- NU5128: Some target frameworks declared in the dependencies group of the nuspec and
     the lib/ref folder do not have exact matches in the other location.
     This is not a problem because we intentionally do not publish assets in the lib folder. -->
-    <!-- NU5129: At least one .targets file was found in 'build/', but 'build/testweaver-1.targets' was not.
+    <!-- NU5129: At least one .targets file was found in 'build/', but 'build/Sigourney.TestWeaver1.targets' was not.
     This is not a problem here since we didn't create an additional targets file. -->
     <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
   </PropertyGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
   <!-- Add the necessary properties and targets to tell MSBuild to pack the weaver alongside its
   dependencies and place it in in a "tools" folder. Code taken from
-  https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation-->
+  https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation -->
   <PropertyGroup>
     <GenerateDependencyFile>true</GenerateDependencyFile>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>

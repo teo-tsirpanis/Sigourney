@@ -12,11 +12,11 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "buildtest-empty", "tests\buildtest-empty\buildtest-empty.csproj", "{D8BB726B-3010-4611-A5ED-7AB622066109}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testweaver-1", "tests\testweaver-1\testweaver-1.csproj", "{EFEB4E37-873B-48F7-9B86-7970D150DBB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigourney.TestWeaver1", "tests\Sigourney.TestWeaver1\Sigourney.TestWeaver1.csproj", "{EFEB4E37-873B-48F7-9B86-7970D150DBB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigourney.Tests", "tests\Sigourney.Tests\Sigourney.Tests.csproj", "{4C1BC04C-43A1-4EBB-8492-B252B6AE9AE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testweaver-2", "tests\testweaver-2\testweaver-2.csproj", "{1286B41D-C48C-4972-95C1-41AE1678A1EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigourney.TestWeaver2", "tests\Sigourney.TestWeaver2\Sigourney.TestWeaver2.csproj", "{1286B41D-C48C-4972-95C1-41AE1678A1EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{132E6BE0-8EF5-4A75-ABEB-1145D12366B7}"
 EndProject

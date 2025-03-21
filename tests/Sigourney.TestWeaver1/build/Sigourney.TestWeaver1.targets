@@ -2,7 +2,7 @@
   <!-- We import the task with the weaver. -->
   <UsingTask AssemblyFile="$(TestWeaver1Assembly)" TaskName="TestWeaver1" />
 
-  <!-- We have registered the following target's name in testweaver-1.props. -->
+  <!-- We have registered the following target's name in Sigourney.TestWeaver1.props. -->
   <Target Name="RunTestWeaver1">
     <!-- Sigourney's MSBuildWeaver class defines some properties, of which only
     AssemblyPath is required. WeaverName is a unique friendly name for the weaver
