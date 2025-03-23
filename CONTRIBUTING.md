@@ -2,7 +2,7 @@
 
 ## How to test
 
-* Install .NET 5 SDK
+* Install .NET 8 SDK
 * Install PowerShell
 * `cd tests`
 * `dotnet msbuild`
