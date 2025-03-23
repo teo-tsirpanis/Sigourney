@@ -1,4 +1,8 @@
 {
     "licenser.author": "Theodore Tsirpanis",
-    "licenser.license": "MIT"
+    "licenser.license": "MIT",
+    "cSpell.words": [
+        "Fody",
+        "Sigourney"
+    ]
 }

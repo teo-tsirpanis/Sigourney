@@ -3,13 +3,13 @@
 [![NuGet](https://img.shields.io/nuget/v/Sigourney)][nuget]
 [![CI build status](https://github.com/teo-tsirpanis/Sigourney/actions/workflows/ci.yml/badge.svg?branch=mainstream&event=push)](https://github.com/teo-tsirpanis/Sigourney/actions/workflows/ci.yml)
 
-Sigourney is a lightweight toolkit that helps developers write weavers, tools that modify other .NET assemblies using [Mono.Cecil][cecil].
+Sigourney is a lightweight toolkit that helps developers write .NET assembly weavers using [Mono.Cecil][cecil].
 
 ## Projects using Sigourney
 
-At the moment, Sigourney is known to be used by two projects, both developed by Sigourney's author.
+At the moment, Sigourney is known to be used in two projects.
 
-* [Covarsky][covarsky], a tool that brings co(ntra)variance in languages that don't support it like F#.
+* [Covarsky][covarsky], a tool that brings generic covariance and contravariance in languages that don't support it like F#.
 * [Farkle][farkle], an LALR parsing library that uses Sigourney for [its grammar precompiler][farkle-precompiler].
 
 If your project uses Sigourney, feel free to open a pull request to add it to the list. It would really help with understanding if and how third parties are using it, and managing breaking changes.
@@ -18,17 +18,15 @@ If your project uses Sigourney, feel free to open a pull request to add it to th
 
 ### Comparing Sigourney with Fody
 
-When the words ".NET assembly" and "weaver" appear in the same sentence, most developers think of [Fody][fody].
+When the words ".NET assembly" and "weaver" appear in the same sentence, most developers think of [Fody][fody]. Sigourney is not Fody and is not meant to replace it. There are several differences between Sigourney and Fody:
 
-Sigourney is a competitor but not a _replacement_ for Fody. Fody is a more advanced, mature and battle-tested tool, but there are two problems with it:
-
-* Fody has [an unusual licensing model][fody-licensing] where every user of it is expected to subscribe to either Open Collective or Tidelift. This requirement is not mandatory though, and Fody is otherwise licensed under the MIT license. But for the people (like Sigourney's author) who prefer to not use Fody at all instead of paying, Sigourney is an alternative.
-
-* Fody has a complicated configuration system that requires an additional `FodyWeavers.xml` file, an XML schema for that file, and typically _three_ NuGet packages: one for Fody itself, one for the weaver, and one for the attributes that control its behavior. Sigourney keeps it simple and flexible. Only two packages are required to be referenced (the package with the weaver and Sigourney itself), configuration usually happens inside the project file, with any attributes being manually defined in the assembly to be weaved.
-
-Fody on the other hand has a much larger community and [variety of weavers developed with it][fody-weavers], whereas Sigourney is a relatively new project whose community and variety of weavers are nearly nonexistent.
-
-Sigourney can also be used as a standalone library without hooking it to MSBuild; something that Fody cannot do.
+* Fody runs all weavers in the same MSBuild task, while sharing the same versions of Mono.Cecil and Fody's core assemblies. By contrast in Sigourney, each weaver is distributed as a standalone package that runs in its own MSBuild task with its own set of dependencies. This loses Fody's benefit of having its weavers' dependencies updated without releasing a new version of them, but Sigourney's approach gives more stability and predictability over the code executed in the weaver. Also the dependency loading logic is handled by MSBuild, significantly reducing the complexity of the Sigourney codebase.
+  * Sigourney's foundational MSBuild code is shared across weavers and shipped in a separate [`Sigourney.Build` package][sigourney-build] that can be independently updated.
+* Sigourney lacks a couple of features that Fody has, like [integrated IL verification](https://github.com/Fody/Home/blob/master/pages/configuration.md#assembly-verification) or [in-solution weaving](https://github.com/Fody/Home/blob/master/pages/in-solution-weaving.md). They might be added in the future.
+* Fody [expects users][fody-licensing] to subscribe to Open Collective. This requirement is not mandatory though, and Fody is otherwise licensed under the MIT license. Sigourney does not have such expectation.
+* Fody has a complicated configuration system that requires an additional `FodyWeavers.xml` file, an XML schema for that file, and up to _three_ NuGet packages: one for Fody itself, one for the weaver, and one for the attributes that control its behavior. Sigourney keeps it simple and flexible. Only two packages are required to be referenced (the package with the weaver and Sigourney itself), configuration usually happens inside the project file, with any attributes being manually defined in the assembly to be weaved.
+* Sigourney can be used as a standalone library without hooking it to MSBuild, which Fody cannot do.
+* Fody has a large community and [a variety of weavers developed with it][fody-weavers], whereas Sigourney is a relatively new project whose community and variety of weavers are nearly nonexistent.
 
 ### Comparing Sigourney with Mono.Cecil
 
@@ -36,7 +34,6 @@ In its essence, Sigourney is a thin layer over Mono.Cecil (Fody is arguably thic
 
 * Assemblies weaved by Sigourney are marked with a type having a name like `ProcessedByMyAwesomeWeaver`. If your awesome weaver attempts to weave the same assembly more than once, Sigourney will do nothing.
 * Sigourney provides easy MSBuild integration of your weavers, allowing them to run when you build your project, without any extra steps. More on that right below.
-* Sigourney supports strong-named assemblies easily, abstracting away most of the logic behind finding the `.snk` files.
 * Sigourney automatically updates the debug symbols of the assemblies, allowing them to still be debugged.
 
 ## How to use
@@ -105,11 +102,11 @@ Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y
 *
     When you build a project with many weavers using a .NET Framework-based edition of MSBuild, each weaver's dependencies are not isolated. For example, if your project uses two weavers and each of them uses a different version of Sigourney, MSBuild will only use the version of Sigourney that the weaver that ran first used. This is an inherent limitation of the .NET Framework whose fix is not trivial and not planned for Sigourney.
 
-    To work around this, ensure that all weavers use the same version of Sigourney, or use a .NET Core-based edition of MSBuild. If you can't do that because you are are using Visual Studio on Windows, [please upvote this feedback item](https://developercommunity.visualstudio.com/t/Allow-building-SDK-style-projects-with-t/1331985).
+    To work around this, ensure that all weavers are compiled with close enough versions of Sigourney, or build your projects with the `dotnet` CLI.
 
 ## License
 
-Sigourney is licensed under the [MIT license][mit], with no strings attached.
+Sigourney is licensed under the [MIT license][mit].
 
 The code that handles strong-named assemblies was originally copied from Fody. If you have any problem with this, do not strong-name your assemblies that are weaved by Sigourney. And why are you still strong-naming your assemblies?
 
@@ -124,6 +121,7 @@ The code that handles strong-named assemblies was originally copied from Fody. I
 [farkle-precompiler]: https://teo-tsirpanis.github.io/Farkle/the-precompiler.html
 [covarsky]: https://github.com/teo-tsirpanis/Covarsky
 [fody]: https://github.com/Fody/Fody
+[sigourney-build]: https://nuget.org/packages/Sigourney.Build
 [fody-licensing]: https://github.com/Fody/Home/blob/master/pages/licensing-patron-faq.md
 [fody-weavers]: https://github.com/Fody/Home/blob/master/pages/addins.md
 [testweaver1]: https://github.com/teo-tsirpanis/Sigourney/tree/mainstream/tests/Sigourney.TestWeaver1
