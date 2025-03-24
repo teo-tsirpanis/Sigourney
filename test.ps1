@@ -10,7 +10,7 @@ $LocalPackagePath = './tests/packages'
 $LocalPackages = Get-ChildItem './tests' -Filter 'Sigourney.TestWeaver*.csproj' -Recurse | ForEach-Object { $_.FullName }
 
 Get-ChildItem $LocalPackagePath -Filter 'Sigourney*' -ErrorAction Ignore | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
-Remove-Directory $TestLogs -ErrorAction Ignore
+Remove-Item $TestLogs -ErrorAction Ignore
 # dotnet clean might fail the first time.
 Remove-Item tests\**\obj\* -Recurse -Force
 
