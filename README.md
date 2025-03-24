@@ -79,9 +79,7 @@ public class Test
 
 To learn more, consult the documentation of the [`Weaver`][weaver-class] class.
 
-## Supported versions policy
-
-__TL;DR:__ Since all known weavers are first-party, backwards compatibility is not a top priority of Sigourney. Upgrade your SDK often. Breaking changes are avoided but inevitable. Expect them in minor releases but not in patch releases.
+## Support policy
 
 Sigourney is a .NET Standard 2.0 library, meaning that it will work in both .NET Framework and .NET Core-based editions of MSBuild (the former are used with the `msbuild` command or on Visual Studio for Windows, and the latter when using modern `dotnet` SDK commands). Unless an assembly with a weaver targets .NET Standard too, its author has to load the correct assembly using MSBuild's `MSBuildRuntimeType` property.
 
@@ -89,11 +87,11 @@ Weavers using Sigourney do not support NuGet clients older than 5.0, which was r
 
 Because Mono.Cecil treats assemblies in a framework-agnostic way, Sigourney should work with any framework version supported by your SDK.
 
-No MSBuild version is explicitly supported or unsupported, but Sigourney is only tested against the latest one. Earlier ones might be supported, or maybe not.
+Sigourney supports all currently supported versions of MSBuild greater than 16.0, and all currently supported versions of the .NET SDK. Only the latest version is tested though, but care is taken to not use anything that does not work in earlier versions. Please open an issue if something does not work in an earlier supported version.
 
-Sigourney is tested with SDK-style projects only. Legacy .NET Framework projects (the big, unreadable ones) are not known whether they work or not.
+Sigourney is tested with SDK-style projects only. Legacy .NET Framework projects (the big, unreadable ones) are not known whether they work or not. Projects that use `packages.config` to manage NuGet packages are not supported.
 
-Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y` range. Patch releases will not break code, although they might upgrade libraries. Minor releases are more likely to break stuff but such impact will be attempted to be kept at a minimum.
+Like Mono.Cecil, Sigourney's version number will most likely stick in the `0.x.y` range. Patch releases will not break code, although they might upgrade libraries. Minor releases are more likely to break stuff but such impact will be attempted to be kept at a minimum. Barring exceptional circumstances, breaking changes will be made after being announced in the previous release.
 
 ## Known issues
 
