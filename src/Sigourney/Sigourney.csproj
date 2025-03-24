@@ -5,7 +5,13 @@
     <PackageId>Sigourney</PackageId>
     <Description>A lightweight toolkit that helps easily writing .NET assembly weavers.</Description>
     <Copyright>$(Copyright) Contains some code from Fody, which is licensed under the MIT License as well.</Copyright>
-    <PackageReleaseNotes>Fixed building projects referencing Sigourney under certain build environments like BenchmarkDotNet.</PackageReleaseNotes>
+    <PackageReleaseNotes>Weaving strong-named assemblies is supported on all platforms.
+
+The 'SigourneyPublishMode' property is deprecated. Weaver authors have to follow official guidance at https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation on how to package an MSBuild task.
+
+The 'SigourneyRegisteredTargetFiles' property is deprecated. Weaver authors should rename their target files to just 'MyPackage.targets' and let MSBuild automatically import them.
+
+The 'AssemblyReference.IsReferenceAssembly' property is deprecated. All assemblies passed in WeaverConfig.References should be presumed to be reference assemblies.</PackageReleaseNotes>
     <PackageTags>$(PackageTags);Cecil</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>8.0</LangVersion>
