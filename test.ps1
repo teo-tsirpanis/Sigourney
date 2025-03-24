@@ -2,13 +2,6 @@
 # This little script runs Sigourney's test project many times to ensure it works repeatedly.
 # It also keeps binary logs of each test run (which are kept as artifacts by CI).
 
-function Remove-Directory-Checked {
-    param ([string]$Directory)
-    if (Test-Path $Directory -PathType Container) {
-        Remove-Item $Directory -Recurse -Force
-    }
-}
-
 $ErrorActionPreference = 'Stop'
 
 $TestLogs = './test-logs/'
@@ -16,8 +9,8 @@ $TestProject = './tests/test.proj'
 $LocalPackagePath = './tests/packages'
 $LocalPackages = Get-ChildItem './tests' -Filter 'Sigourney.TestWeaver*.csproj' -Recurse | ForEach-Object { $_.FullName }
 
-Get-ChildItem $LocalPackagePath -Filter 'Sigourney*' | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
-Remove-Directory-Checked $TestLogs
+Get-ChildItem $LocalPackagePath -Filter 'Sigourney*' -ErrorAction Ignore | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
+Remove-Directory $TestLogs -ErrorAction Ignore
 # dotnet clean might fail the first time.
 Remove-Item tests\**\obj\* -Recurse -Force
 
