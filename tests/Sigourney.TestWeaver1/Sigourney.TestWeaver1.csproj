@@ -2,14 +2,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.0.0-local</Version>
-    <!-- NU5128: Some target frameworks declared in the dependencies group of the nuspec and
-    the lib/ref folder do not have exact matches in the other location.
-    This is not a problem because we intentionally do not publish assets in the lib folder. -->
-    <!-- NU5129: At least one .targets file was found in 'build/', but 'build/Sigourney.TestWeaver1.targets' was not.
-    This is not a problem here since we didn't create an additional targets file. -->
-    <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Include a dummy file in the lib directory, to fix some NuGet warnings. -->
+    <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0" />
     <None Include="build/**" Pack="true" PackagePath="build" />
     <!-- The PrivateAssets attribute means that we don't want any package using this weaver
     to reference Sigourney as well. Version 0.0.0-local is not on NuGet; it's a special version

@@ -2,9 +2,10 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <Version>0.0.0-local</Version>
-    <NoWarn>$(NoWarn);NU5128;NU5129</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="_._" Pack="true" PackagePath="lib/netstandard2.0" />
+    <None Include="_._" Pack="true" PackagePath="lib/net8.0" />
     <None Include="build/**" Pack="true" PackagePath="build" />
     <PackageReference Include="Sigourney" Version="[0.0.0-local]" PrivateAssets="all" />
     <PackageReference Include="Sigourney.Build" Version="[0.0.0-local]" />
