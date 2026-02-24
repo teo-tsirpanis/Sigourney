@@ -15,15 +15,6 @@
             "problemMatcher": []
         },
         {
-            "label": "Pack",
-            "type": "process",
-            "command": "pwsh",
-            "args": [
-                "pack.ps1"
-            ],
-            "problemMatcher": []
-        },
-        {
             "label": "Clean",
             "type": "process",
             "command": "git",

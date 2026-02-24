@@ -13,7 +13,7 @@ Should the test projects fail loading on an IDE, try running it first.
 
 ## How to pack
 
-Run the `pack.ps1` script. The packages will be placed in the `bin` folder.
+`dotnet pack ./Sigourney.Shipping.slnf`
 
 ## Coding guidelines
 
