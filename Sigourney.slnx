@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Sigourney.Build/Sigourney.Build.csproj" />
+    <Project Path="src/Sigourney/Sigourney.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/test.proj" />
+    <Project Path="tests/buildtest-empty/buildtest-empty.csproj" />
+    <Project Path="tests/Sigourney.Tests/Sigourney.Tests.csproj" />
+    <Project Path="tests/Sigourney.TestWeaver1/Sigourney.TestWeaver1.csproj" />
+    <Project Path="tests/Sigourney.TestWeaver2/Sigourney.TestWeaver2.csproj" />
+  </Folder>
+</Solution>

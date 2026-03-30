@@ -1,6 +1,6 @@
 {
   "solution": {
-    "path": "Sigourney.sln",
+    "path": "Sigourney.slnx",
     "projects": [
       "src\\Sigourney.Build\\Sigourney.Build.csproj",
       "src\\Sigourney\\Sigourney.csproj"
